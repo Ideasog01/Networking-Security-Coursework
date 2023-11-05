@@ -61,7 +61,7 @@ public class Multiplayer : MonoBehaviour
             bulletRb.transform.forward = this.transform.forward;
             bulletRb.velocity = bulletRb.transform.forward * bulletSpeed;
 
-            bulletRb.GetComponent<MultiplayerCollisionController>().IsPlayerBullet = true;
+            bulletRb.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
 
             bulletShotEfx.Play();
 

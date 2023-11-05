@@ -2,24 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class MultiplayerCollisionController : MonoBehaviour
 {
     [SerializeField] private Transform collisionEfxPrefab;
     [SerializeField] private int collisionDamage;
 
-    private bool _isPlayerBullet;
+    private Photon.Realtime.Player _owner;
 
-    public bool IsPlayerBullet
+    public int CollisionDamage
     {
-        set { _isPlayerBullet = value; }
+        get { return collisionDamage; }
+    }
+
+    public Photon.Realtime.Player Owner
+    {
+        get { return _owner; }
+        set { _owner = value; }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
         {
-            collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(collisionDamage);
+            collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(this);
         }
 
         SpawnBulletEfx();

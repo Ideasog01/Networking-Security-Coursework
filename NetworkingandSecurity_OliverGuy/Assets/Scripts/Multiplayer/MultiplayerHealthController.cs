@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -42,14 +43,15 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(MultiplayerCollisionController collision)
     {
-        _currentHealth -= amount;
+        _currentHealth -= collision.CollisionDamage;
 
         healthSlider.value = _currentHealth;
 
         if(_currentHealth <= 0)
         {
+            collision.Owner.AddScore(1);
             ControllerDeath();
         }
     }
