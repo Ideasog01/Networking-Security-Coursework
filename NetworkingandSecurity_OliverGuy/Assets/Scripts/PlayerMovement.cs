@@ -32,21 +32,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateMovement(float horizontalInput, float verticalInput)
     {
-        Vector3 movementDir = Vector3.zero;
-
-        if(horizontalInput == 0 && verticalInput != 0)
-        {
-            movementDir += this.transform.forward * verticalInput;
-        }
-        else if(verticalInput == 0 && horizontalInput != 0)
-        {
-            movementDir += this.transform.right * horizontalInput;
-        }
-        else if(horizontalInput != 0 && verticalInput != 0)
-        {
-            movementDir += this.transform.forward * verticalInput;
-            movementDir += this.transform.right * horizontalInput;
-        }
+        Vector3 movementDir = new Vector3(horizontalInput, 0, verticalInput);
 
         movementDir *= Time.deltaTime * movementSpeed;
 

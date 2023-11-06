@@ -14,7 +14,6 @@ public class CharacterAnimations : MonoBehaviour
     private void Update()
     {
         Debug.Log(_characterRb.velocity);
-        characterAnimator.SetFloat("Horizontal", _characterRb.velocity.x);
         characterAnimator.SetFloat("Vertical", _characterRb.velocity.z);
     }
 
