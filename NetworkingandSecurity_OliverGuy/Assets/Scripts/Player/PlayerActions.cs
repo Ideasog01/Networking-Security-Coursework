@@ -18,20 +18,22 @@ public class PlayerActions : MonoBehaviour
     private float _fireCooldownDuration;
 
     private PlayerMovement _playerMovement;
+    private Animator _playerAnimator;
 
     private void Awake()
     {
         _playerMovement = this.GetComponent<PlayerMovement>();
+        _playerAnimator = this.transform.GetChild(0).GetComponent<Animator>();
     }
 
     private void Update()
     {
-        //Input
-
         if(_fireCooldownDuration <= 0 && Input.GetMouseButtonDown(0))
         {
-            FireBullet();
+            FireBulletAnimation();
         }
+
+        _playerMovement.UpdateRotation();
     }
 
     private void FixedUpdate()
@@ -39,7 +41,12 @@ public class PlayerActions : MonoBehaviour
         _playerMovement.UpdateMovement();
     }
 
-    private void FireBullet()
+    private void FireBulletAnimation()
+    {
+        _playerAnimator.SetTrigger("Primary");
+    }
+
+    public void FireBullet()
     {
         Rigidbody bulletRb = Instantiate(bulletPrefab.GetComponent<Rigidbody>(), bulletSpawn.transform.position, this.transform.rotation);
 

@@ -17,6 +17,8 @@ public class Multiplayer : MonoBehaviour
     [SerializeField] private float bulletSpeed;
     [SerializeField] private ParticleSystem bulletShotEfx;
 
+    private Animator _playerAnimator;
+
     private PhotonView _photonView;
     private PlayerMovement _playerMovement;
 
@@ -26,6 +28,7 @@ public class Multiplayer : MonoBehaviour
     {
         _photonView = this.GetComponent<PhotonView>();
         _playerMovement = this.GetComponent<PlayerMovement>();
+        _playerAnimator = this.transform.GetChild(0).GetComponent<Animator>();
     }
 
     private void Update()
@@ -35,9 +38,11 @@ public class Multiplayer : MonoBehaviour
             return;
         }
 
+        _playerMovement.UpdateRotation();
+
         if(Input.GetMouseButtonDown(0))
         {
-            _photonView.RPC("FireBullet", RpcTarget.AllViaServer);
+            _playerAnimator.SetTrigger("Primary");
         }
     }
 
@@ -49,6 +54,11 @@ public class Multiplayer : MonoBehaviour
         }
 
         _playerMovement.UpdateMovement();
+    }
+
+    public void PrimaryFire()
+    {
+        _photonView.RPC("FireBullet", RpcTarget.AllViaServer);
     }
 
     [PunRPC]
