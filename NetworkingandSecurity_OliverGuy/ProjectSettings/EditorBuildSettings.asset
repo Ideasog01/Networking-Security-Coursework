@@ -9,13 +9,16 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 9f1aace214b06ea4abe45254e279c1e6
   - enabled: 1
+    path: Assets/Scenes/MenuScene_Singleplayer.unity
+    guid: db8f0a6fe787b9242b015926a2695962
+  - enabled: 1
+    path: Assets/Scenes/MenuScene_Multiplayer.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
     path: Assets/Scenes/GameplayScene_Singleplayer.unity
     guid: c427be79bee69f444a633948b5f1546e
   - enabled: 1
     path: Assets/Scenes/GameplayScene_Multiplayer.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/GameScene_PlayerBattle.unity
     guid: 718b5ece3e5877d4b8a4ca2a3005e672
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

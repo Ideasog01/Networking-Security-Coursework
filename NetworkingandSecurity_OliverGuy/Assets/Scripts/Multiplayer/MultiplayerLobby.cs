@@ -3,27 +3,37 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class MultiplayerLobby : MonoBehaviourPunCallbacks
 {
+    [Header("Panels")]
+
     public Transform loginPanel;
     public Transform selectionPanel;
     public Transform createRoomPanel;
     public Transform insideRoomPanel;
     public Transform listRoomsPanel;
+    public Transform failedRoomsPanel;
 
-    public Transform listRoomPanel;
+    [Header("Prefabs")]
+
     public Transform roomEntryPrefab;
+    public GameObject playerNamePrefab;
+
+    [Header("Input Fields")]
+
+    public TMP_InputField roomNameInput;
+    public TMP_InputField playerNameInput;
+
+    [Header("Parents")]
+
     public Transform listRoomPanelContent;
-
-    public InputField roomNameInput;
-
-    public InputField playerNameInput;
-    public string playerName;
-
-    public GameObject textPrefab;
     public Transform insideRoomPlayerList;
 
+    [Header("Misc")]
+
+    public string playerName;
     public GameObject startGameButton;
 
     private Dictionary<string, RoomInfo> _cachedRoomList;
@@ -80,7 +90,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("GameScene_PlayerBattle");
+        PhotonNetwork.LoadLevel("GameplayScene_Multiplayer");
     }
 
     public override void OnConnectedToMaster()
@@ -113,8 +123,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
         foreach(var player in PhotonNetwork.PlayerList)
         {
-            var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
-            playerListEntry.GetComponent<Text>().text = player.NickName;
+            var playerListEntry = Instantiate(playerNamePrefab, insideRoomPlayerList);
+            playerListEntry.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = player.NickName;
         }
     }
 
@@ -160,8 +170,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log("A Player Joined a Room.");
-        var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
-        playerListEntry.GetComponent<Text>().text = newPlayer.NickName;
+        var playerListEntry = Instantiate(playerNamePrefab, insideRoomPlayerList);
+        playerListEntry.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = newPlayer.NickName;
         playerListEntry.name = newPlayer.NickName;
     }
 
@@ -187,6 +197,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("Failed to join random room. " + message);
+        ActivatePanel("FailedToJoinRandomRoom");
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -201,6 +212,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         createRoomPanel.gameObject.SetActive(false);
         insideRoomPanel.gameObject.SetActive(false);
         listRoomsPanel.gameObject.SetActive(false);
+        failedRoomsPanel.gameObject.SetActive(false);
 
         if(panelName == loginPanel.gameObject.name)
         {
@@ -221,6 +233,10 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         else if(panelName == listRoomsPanel.gameObject.name)
         {
             listRoomsPanel.gameObject.SetActive(true);
+        }
+        else if(panelName == failedRoomsPanel.gameObject.name)
+        {
+            failedRoomsPanel.gameObject.SetActive(true);
         }
     }
 
