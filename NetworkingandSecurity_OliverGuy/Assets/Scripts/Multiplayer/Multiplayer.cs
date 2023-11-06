@@ -48,7 +48,7 @@ public class Multiplayer : MonoBehaviour
             return;
         }
 
-        _playerMovement.UpdateMovement();
+        //_playerMovement.UpdateMovement();
     }
 
     [PunRPC]

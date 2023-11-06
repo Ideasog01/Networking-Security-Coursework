@@ -1,67 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerActions : MonoBehaviour
 {
-    [Header("Bullet World Refs")]
+    private UnityAction _primaryAction;
+    private UnityAction _ability1Action;
+    private UnityAction _ability2Action;
 
-    [SerializeField] private Transform bulletPrefab;
-    [SerializeField] private Transform bulletSpawn;
-
-    [Header("Firing Action Properties")]
-
-    [SerializeField] private float fireCooldown;
-    [SerializeField] private float bulletSpeed;
-    [SerializeField] private ParticleSystem bulletShotEfx;
-
-    private float _fireCooldownDuration;
-
-    private PlayerMovement _playerMovement;
-
-    private void Awake()
+    public UnityAction PrimaryAction
     {
-        _playerMovement = this.GetComponent<PlayerMovement>();
+        get { return _primaryAction; }
+        set { _primaryAction = value; }
     }
 
-    private void Update()
+    public UnityAction Ability1Action
     {
-        //Input
+        get { return _ability1Action; }
+        set { _ability1Action = value; }
+    }
 
-        if(_fireCooldownDuration <= 0 && Input.GetMouseButtonDown(0))
+    public UnityAction Ability2Action
+    {
+        get { return _ability2Action; }
+        set { _ability2Action = value; }
+    }
+
+    public void PrimaryActionTrigger()
+    {
+        if(_primaryAction != null)
         {
-            FireBullet();
+            _primaryAction.Invoke();
         }
     }
 
-    private void FixedUpdate()
+    public void Ability1ActionTrigger()
     {
-        _playerMovement.UpdateMovement();
-    }
-
-    private void FireBullet()
-    {
-        Rigidbody bulletRb = Instantiate(bulletPrefab.GetComponent<Rigidbody>(), bulletSpawn.transform.position, this.transform.rotation);
-
-        bulletRb.transform.forward = this.transform.forward;
-        bulletRb.velocity = bulletRb.transform.forward * bulletSpeed;
-
-        bulletRb.GetComponent<CollisionController>().IsPlayerBullet = true;
-
-        bulletShotEfx.Play();
-
-        _fireCooldownDuration = fireCooldown;
-        StartCoroutine(FireCooldown());
-    }
-
-    private IEnumerator FireCooldown()
-    {
-        yield return new WaitForSeconds(0.1f);
-        _fireCooldownDuration -= 0.1f;
-
-        if(_fireCooldownDuration > 0)
+        if(_ability1Action != null)
         {
-            StartCoroutine(FireCooldown());
+            _ability1Action.Invoke();
+        }
+    }
+
+    public void Ability2ActionTrigger()
+    {
+        if(_ability2Action != null)
+        {
+            _ability2Action.Invoke();
         }
     }
 }
