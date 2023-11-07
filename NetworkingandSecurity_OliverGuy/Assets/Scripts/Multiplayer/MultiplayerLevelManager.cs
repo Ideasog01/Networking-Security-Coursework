@@ -2,20 +2,34 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
-using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 {
+    public static Slider PlayerHealthSlider;
+    public static Slider[] AbilitySliderArray;
+    public static TextMeshProUGUI[] AbilityTextArray;
+
+
     [SerializeField] private int maxKills = 3;
     [SerializeField] private GameObject gameOverPopup;
     [SerializeField] private Text winnerText;
 
+    [Header("HUD")]
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Slider[] abilitySliderArray;
+    [SerializeField] private TextMeshProUGUI[] abilityTextArray;
+
     private void Start()
     {
-        PhotonNetwork.Instantiate("Player_Multiplayer", Vector3.zero, Quaternion.identity);
+        PlayerHealthSlider = healthSlider;
+        AbilitySliderArray = abilitySliderArray;
+        AbilityTextArray = abilityTextArray;
+
+        GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", Vector3.zero, Quaternion.identity);
     }
     public void LeaveGame()
     {

@@ -43,6 +43,9 @@ public class PlayerActions : MonoBehaviour
         _playerMovement = this.GetComponent<PlayerMovement>();
         _playerHealthController = this.GetComponent<HealthController>();
         _playerAnimator = this.transform.GetChild(0).GetComponent<Animator>();
+
+        abilitySliderArray = MultiplayerLevelManager.AbilitySliderArray;
+        abilityTextArray = MultiplayerLevelManager.AbilityTextArray;
     }
 
     private void Update()

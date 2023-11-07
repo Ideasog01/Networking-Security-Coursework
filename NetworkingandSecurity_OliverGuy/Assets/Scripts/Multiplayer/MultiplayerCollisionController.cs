@@ -1,15 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class MultiplayerCollisionController : MonoBehaviour
 {
     [SerializeField] private Transform collisionEfxPrefab;
     [SerializeField] private int collisionDamage;
+    [SerializeField] private float objectDuration;
+    [SerializeField] private bool destroyOnCollision;
 
     private Photon.Realtime.Player _owner;
+
+    private List<Collider> _colliderList = new List<Collider>();
+
+    private Collider _ownerCollider;
+
+    public Collider OwnerCollider
+    {
+        set { _ownerCollider = value; }
+    }
 
     public int CollisionDamage
     {
@@ -22,16 +30,38 @@ public class MultiplayerCollisionController : MonoBehaviour
         set { _owner = value; }
     }
 
+    private void Awake()
+    {
+        Destroy(this.gameObject, objectDuration);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
+        if (collision.collider.CompareTag("Projectile"))
         {
-            collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(this);
+            Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
         }
 
-        SpawnBulletEfx();
+        if (collision.collider != _ownerCollider && !_colliderList.Contains(collision.collider))
+        {
+            if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
+            {
+                collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(this);
+            }
 
-        Destroy(this.gameObject);       
+            SpawnBulletEfx();
+
+            _colliderList.Add(collision.collider);
+
+            if (destroyOnCollision)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
+            }
+        }
     }
 
     private void SpawnBulletEfx()
