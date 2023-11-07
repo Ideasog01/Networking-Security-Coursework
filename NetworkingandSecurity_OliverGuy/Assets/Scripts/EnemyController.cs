@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
     {
         float distance = Vector3.Distance(this.transform.position, _playerTransform.position);
 
-        if(distance < 8)
+        if(distance < 12)
         {
             this.transform.LookAt(_playerTransform);
             this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);

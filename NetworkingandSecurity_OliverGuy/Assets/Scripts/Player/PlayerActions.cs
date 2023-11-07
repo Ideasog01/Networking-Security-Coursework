@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -23,6 +25,10 @@ public class PlayerActions : MonoBehaviour
     [Header("Ability 2")]
 
     [SerializeField] private ParticleSystem shieldVisualEffect;
+
+    [Header("Ability Display")]
+    [SerializeField] private Slider[] abilitySliderArray;
+    [SerializeField] private TextMeshProUGUI[] abilityTextArray;
 
     private float[] _abilityCooldowns = new float[3];
 
@@ -108,7 +114,6 @@ public class PlayerActions : MonoBehaviour
     {
         _playerHealthController.IsInvulnerable = true;
         shieldVisualEffect.Play();
-        StartCoroutine(AbilityCooldown(2));
         StartCoroutine(CancelShield());
     }
 
@@ -120,7 +125,8 @@ public class PlayerActions : MonoBehaviour
 
     private IEnumerator CancelShield()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(7);
+        StartCoroutine(AbilityCooldown(2));
         _playerHealthController.IsInvulnerable = false;
     }
 
@@ -129,9 +135,17 @@ public class PlayerActions : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         _abilityCooldowns[abilityIndex] -= 0.1f;
 
-        if(_abilityCooldowns[abilityIndex] > 0)
+        abilitySliderArray[abilityIndex].maxValue = abilityCooldownDurations[abilityIndex];
+        abilitySliderArray[abilityIndex].value = _abilityCooldowns[abilityIndex];
+
+        if (_abilityCooldowns[abilityIndex] > 0)
         {
+            abilityTextArray[abilityIndex].text = _abilityCooldowns[abilityIndex].ToString("F0");
             StartCoroutine(AbilityCooldown(abilityIndex));
+        }
+        else
+        {
+            abilityTextArray[abilityIndex].text = "";
         }
     }
 }
