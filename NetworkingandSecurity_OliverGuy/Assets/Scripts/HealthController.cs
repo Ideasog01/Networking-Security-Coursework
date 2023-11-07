@@ -16,10 +16,20 @@ public class HealthController : MonoBehaviour
     [SerializeField] private int maxHealth;
     [SerializeField] private bool isEnemy;
 
+    [Header("Events")]
+
+    [SerializeField] private UnityEvent onControllerDeathEvent;
+
     private int _currentHealth;
+    private bool _isInvulnerable;
 
     public delegate void EnemyKilled();
     public static event EnemyKilled OnEnemyKilled;
+
+    public bool IsInvulnerable
+    {
+        set { _isInvulnerable = value; }
+    }
 
     private void Awake()
     {
@@ -30,19 +40,22 @@ public class HealthController : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        _currentHealth -= amount;
-
-        healthSlider.value = _currentHealth;
-
-        if(_currentHealth <= 0)
+        if(!_isInvulnerable)
         {
-            ControllerDeath();
+            _currentHealth -= amount;
+
+            healthSlider.value = _currentHealth;
+
+            if (_currentHealth <= 0)
+            {
+                ControllerDeath();
+            }
         }
     }
 
     public void ControllerDeath()
     {
-        this.gameObject.SetActive(false);
+        onControllerDeathEvent.Invoke();
 
         if(isEnemy && OnEnemyKilled != null)
         {
@@ -52,5 +65,7 @@ public class HealthController : MonoBehaviour
         {
             Debug.Log("Enemy Killed event was null");
         }
+
+        this.gameObject.SetActive(false);
     }
 }

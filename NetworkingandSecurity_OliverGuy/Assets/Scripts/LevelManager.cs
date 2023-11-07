@@ -9,6 +9,10 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI enemyCountText;
 
+    [SerializeField] private GameObject victoryCanvas;
+
+    [SerializeField] private PlayerActions playerActions;
+
     private void Start()
     {
         enemyCountText.text = "Enemies Remaining: " + enemyCount.ToString();
@@ -19,5 +23,11 @@ public class LevelManager : MonoBehaviour
     {
         enemyCount--;
         enemyCountText.text = "Enemies Remaining: " + enemyCount.ToString();
+
+        if(enemyCount <= 0)
+        {
+            victoryCanvas.SetActive(true);
+            playerActions.DisablePlayer(true);
+        }
     }
 }
