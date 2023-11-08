@@ -1,10 +1,6 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class MultiplayerHealthController : MonoBehaviour, IPunObservable
@@ -13,15 +9,11 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
 
     [SerializeField] private int maxHealth;
     [SerializeField] private bool isEnemy;
+    [SerializeField] private Slider healthSlider;
 
     private int _currentHealth;
 
-    [SerializeField] private Slider healthSlider;
-
     private bool _isInvulnerable;
-
-    public delegate void EnemyKilled();
-    public static event EnemyKilled OnEnemyKilled;
 
     private PhotonView _photonView;
 
@@ -30,19 +22,13 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         set { _isInvulnerable = value; }
     }
 
-    public Slider HealthSlider
-    {
-        set { healthSlider = value; }
-    }
-
-
-    private void Awake()
+    private void Start()
     {
         _photonView = this.GetComponent<PhotonView>();
 
         if (_photonView.IsMine)
         {
-            healthSlider = MultiplayerLevelManager.PlayerHealthSlider;
+            healthSlider = MultiplayerLevelManager.PlayerHealthSlider; //Assign to HUD Slider
         }
 
         _currentHealth = maxHealth;
@@ -56,14 +42,10 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         {
             stream.SendNext(_currentHealth);
         }
-        else
+        else if(stream.IsReading)
         {
             _currentHealth = (int)stream.ReceiveNext();
-
-            if(healthSlider != null)
-            {
-                healthSlider.value = _currentHealth;
-            }
+            healthSlider.value = _currentHealth;
         }
     }
 
@@ -73,7 +55,9 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         {
             _currentHealth -= collision.CollisionDamage;
 
-            if (healthSlider != null)
+            Debug.Log("Entity took damage: " + collision.Owner.NickName + "\nHealth: " + _currentHealth.ToString());
+
+            if(_photonView.IsMine)
             {
                 healthSlider.value = _currentHealth;
             }
@@ -92,20 +76,11 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
 
     public void ControllerDeath()
     {
-        _currentHealth = 100;
+        _currentHealth = maxHealth;
 
-        if(healthSlider != null)
+        if (_photonView.IsMine)
         {
             healthSlider.value = _currentHealth;
-        }
-
-        if(isEnemy && OnEnemyKilled != null)
-        {
-            OnEnemyKilled.Invoke();
-        }
-        else
-        {
-            Debug.Log("Enemy Killed event was null");
         }
     }
 }
