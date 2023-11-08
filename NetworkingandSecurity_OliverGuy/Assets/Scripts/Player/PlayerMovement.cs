@@ -86,7 +86,10 @@ public class PlayerMovement : MonoBehaviour
                 this.transform.rotation = Quaternion.Lerp(this.transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
                 this.transform.rotation = Quaternion.Euler(0, this.transform.eulerAngles.y, 0);
 
-                cursorTransform.transform.position = hit.point;
+                if(cursorTransform != null)
+                {
+                    cursorTransform.transform.position = hit.point;
+                }
 
                 float diffZ = this.transform.position.z - hit.point.z;
                 float diffX = this.transform.position.x - hit.point.x;

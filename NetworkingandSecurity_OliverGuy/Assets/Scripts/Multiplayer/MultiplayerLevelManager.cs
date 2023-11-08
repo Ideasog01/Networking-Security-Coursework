@@ -41,8 +41,9 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     {
         if(targetPlayer.GetScore() == maxKills)
         {
-            winnerText.text = targetPlayer.NickName;
-            gameOverPopup.SetActive(true);
+            //winnerText.text = targetPlayer.NickName;
+            //gameOverPopup.SetActive(true);
+            Debug.Log(targetPlayer.NickName + " won!");
         }
     }
 

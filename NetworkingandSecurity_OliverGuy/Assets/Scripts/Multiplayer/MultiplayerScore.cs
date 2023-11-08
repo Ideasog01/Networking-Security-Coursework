@@ -23,7 +23,7 @@ public class MultiplayerScore : MonoBehaviourPunCallbacks
             var playerScoreObjectText = playerScoreObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             playerScoreObjectText.text = player.NickName + ": " + player.GetScore().ToString();
 
-            playerScore[player.ActorNumber] = playerScoreObject;
+            playerScore.Add(player.ActorNumber, playerScoreObject);
         }
     }
 

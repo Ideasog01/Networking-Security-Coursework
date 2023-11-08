@@ -42,7 +42,7 @@ public class MultiplayerCollisionController : MonoBehaviour
             Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
         }
 
-        if (collision.collider != _ownerCollider && !_colliderList.Contains(collision.collider))
+        if (collision.collider != _ownerCollider)
         {
             if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
             {

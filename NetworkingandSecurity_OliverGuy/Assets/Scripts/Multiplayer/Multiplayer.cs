@@ -51,6 +51,15 @@ public class Multiplayer : MonoBehaviour
 
         abilitySliderArray = MultiplayerLevelManager.AbilitySliderArray;
         abilityTextArray = MultiplayerLevelManager.AbilityTextArray;
+
+        if(!_photonView.IsMine)
+        {
+            this.transform.parent.GetChild(1).gameObject.SetActive(false);
+        }
+        else
+        {
+            this.transform.GetChild(3).gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -110,12 +119,13 @@ public class Multiplayer : MonoBehaviour
 
     private void PrimaryAttack()
     {
-        Rigidbody bulletRb = Instantiate(primaryProjectilePrefab.GetComponent<Rigidbody>(), projectileSpawn.transform.position, this.transform.rotation);
+        Rigidbody projectileRb = Instantiate(primaryProjectilePrefab.GetComponent<Rigidbody>(), projectileSpawn.transform.position, this.transform.rotation);
 
-        bulletRb.transform.forward = this.transform.forward;
-        bulletRb.velocity = bulletRb.transform.forward * primaryProjectileSpeed;
+        projectileRb.transform.forward = this.transform.forward;
+        projectileRb.velocity = projectileRb.transform.forward * primaryProjectileSpeed;
 
-        bulletRb.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
+        projectileRb.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
+        projectileRb.GetComponent<MultiplayerCollisionController>().OwnerCollider = this.GetComponent<Collider>();
 
         _abilityCooldowns[0] = abilityCooldownDurations[0];
         StartCoroutine(AbilityCooldown(0));
@@ -128,6 +138,7 @@ public class Multiplayer : MonoBehaviour
         projectileRb.transform.forward = this.transform.forward;
         projectileRb.velocity = projectileRb.transform.forward * ability1ProjectileSpeed;
 
+        projectileRb.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
         projectileRb.GetComponent<MultiplayerCollisionController>().OwnerCollider = this.GetComponent<Collider>();
 
         StartCoroutine(AbilityCooldown(1));
