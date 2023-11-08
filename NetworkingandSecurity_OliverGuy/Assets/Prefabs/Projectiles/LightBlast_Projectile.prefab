@@ -51,7 +51,7 @@ MonoBehaviour:
   collisionEfxPrefab: {fileID: 1000010321467122, guid: 349851bdec9a2914d982da27aa660468, type: 3}
   collisionDamage: 60
   objectDuration: 7
-  destroyOnCollision: 0
+  destroyOnCollision: 1
 --- !u!54 &5118331724349294699
 Rigidbody:
   m_ObjectHideFlags: 0

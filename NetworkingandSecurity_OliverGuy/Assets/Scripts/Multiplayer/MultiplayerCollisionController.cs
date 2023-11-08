@@ -6,12 +6,8 @@ public class MultiplayerCollisionController : MonoBehaviour
     [SerializeField] private Transform collisionEfxPrefab;
     [SerializeField] private int collisionDamage;
     [SerializeField] private float objectDuration;
-    [SerializeField] private bool destroyOnCollision;
 
     private Photon.Realtime.Player _owner;
-
-    private List<Collider> _colliderList = new List<Collider>();
-
     private Collider _ownerCollider;
 
     public Collider OwnerCollider
@@ -51,16 +47,7 @@ public class MultiplayerCollisionController : MonoBehaviour
 
             SpawnBulletEfx();
 
-            _colliderList.Add(collision.collider);
-
-            if (destroyOnCollision)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
-            }
+            Destroy(this.gameObject);
         }
     }
 

@@ -6,6 +6,7 @@ public class CharacterAnimations : MonoBehaviour
     [SerializeField] private UnityEvent primaryEvent;
     [SerializeField] private UnityEvent ability1Event;
     [SerializeField] private UnityEvent ability2Event;
+    [SerializeField] private UnityEvent ability3Event;
 
     [SerializeField] private UnityEvent enableMovement;
 
@@ -27,5 +28,10 @@ public class CharacterAnimations : MonoBehaviour
     public void Ability2()
     {
         ability2Event.Invoke();
+    }
+
+    public void Ability3()
+    {
+        ability3Event.Invoke();
     }
 }

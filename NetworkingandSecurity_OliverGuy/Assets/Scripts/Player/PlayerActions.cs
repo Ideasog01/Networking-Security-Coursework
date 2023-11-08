@@ -26,11 +26,16 @@ public class PlayerActions : MonoBehaviour
 
     [SerializeField] private ParticleSystem shieldVisualEffect;
 
+    [Header("Ability 3")]
+
+    [SerializeField] private float ability3ProjectileSpeed;
+    [SerializeField] private Transform ability3ProjectilePrefab;
+
     [Header("Ability Display")]
     [SerializeField] private Slider[] abilitySliderArray;
     [SerializeField] private TextMeshProUGUI[] abilityTextArray;
 
-    private float[] _abilityCooldowns = new float[3];
+    private float[] _abilityCooldowns;
 
     private PlayerMovement _playerMovement;
     private HealthController _playerHealthController;
@@ -43,9 +48,7 @@ public class PlayerActions : MonoBehaviour
         _playerMovement = this.GetComponent<PlayerMovement>();
         _playerHealthController = this.GetComponent<HealthController>();
         _playerAnimator = this.transform.GetChild(0).GetComponent<Animator>();
-
-        abilitySliderArray = MultiplayerLevelManager.AbilitySliderArray;
-        abilityTextArray = MultiplayerLevelManager.AbilityTextArray;
+        _abilityCooldowns = new float[4];
     }
 
     private void Update()
@@ -71,6 +74,12 @@ public class PlayerActions : MonoBehaviour
         {
             PlayAnimation("Ability2");
             _abilityCooldowns[2] = abilityCooldownDurations[2];
+        }
+
+        if (_abilityCooldowns[3] <= 0 && Input.GetKeyDown(KeyCode.R) && !_playerMovement.StopMovement)
+        {
+            PlayAnimation("Ability3");
+            _abilityCooldowns[3] = abilityCooldownDurations[3];
         }
 
         _playerMovement.UpdateRotation();
@@ -118,6 +127,20 @@ public class PlayerActions : MonoBehaviour
         _playerHealthController.IsInvulnerable = true;
         shieldVisualEffect.Play();
         StartCoroutine(CancelShield());
+    }
+
+    public void TimeBlast()
+    {
+        Rigidbody projectileRb = Instantiate(ability3ProjectilePrefab.GetComponent<Rigidbody>(), projectileSpawn.transform.position, this.transform.rotation);
+
+        projectileRb.transform.forward = this.transform.forward;
+        projectileRb.velocity = projectileRb.transform.forward * ability3ProjectileSpeed;
+
+        projectileRb.GetComponent<CollisionController>().OwnerCollider = this.GetComponent<Collider>();
+
+        VisualEffectManager.SpawnVisualEffect(primaryVisualEffectPrefab, projectileSpawn.position, this.transform.rotation, 5);
+
+        StartCoroutine(AbilityCooldown(3));
     }
 
     public void DisablePlayer(bool disable)
