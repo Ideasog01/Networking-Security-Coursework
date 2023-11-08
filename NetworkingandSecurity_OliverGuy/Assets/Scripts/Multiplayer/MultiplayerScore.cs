@@ -1,9 +1,8 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,8 +20,8 @@ public class MultiplayerScore : MonoBehaviourPunCallbacks
             player.SetScore(0);
 
             var playerScoreObject = Instantiate(playerScorePrefab, panel);
-            var playerScoreObjectText = playerScoreObject.GetComponent<Text>();
-            playerScoreObjectText.text = string.Format("{0} Score: {1}", player.NickName, player.GetScore());
+            var playerScoreObjectText = playerScoreObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            playerScoreObjectText.text = player.NickName + ": " + player.GetScore().ToString();
 
             playerScore[player.ActorNumber] = playerScoreObject;
         }
@@ -31,7 +30,7 @@ public class MultiplayerScore : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         var playerScoreObject = playerScore[targetPlayer.ActorNumber];
-        var playerScoreObjectText = playerScoreObject.GetComponent<Text>();
-        playerScoreObjectText.text = string.Format("{0} Score: {1}", targetPlayer.NickName, targetPlayer.GetScore());
+        var playerScoreObjectText = playerScoreObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        playerScoreObjectText.text = targetPlayer.NickName + ": " + targetPlayer.GetScore().ToString();
     }
 }

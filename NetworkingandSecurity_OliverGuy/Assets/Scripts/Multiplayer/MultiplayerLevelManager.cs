@@ -31,6 +31,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
         GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", Vector3.zero, Quaternion.identity);
     }
+
     public void LeaveGame()
     {
         PhotonNetwork.LeaveRoom();
