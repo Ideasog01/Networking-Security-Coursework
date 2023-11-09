@@ -25623,6 +25623,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   cursorTransform: {fileID: 4889167964593966222}
+  minX: -20
+  minZ: -23
+  maxX: 21
+  maxZ: 20
 --- !u!114 &7440309469798879878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41921,6 +41925,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: isDisabled
+  - Type: 4
+    SynchronizeType: 2
+    Name: isDead
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0

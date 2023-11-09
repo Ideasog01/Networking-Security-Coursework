@@ -13,6 +13,13 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Transform cursorTransform;
 
+    [Header("Movement Constraints")]
+
+    [SerializeField] private float minX;
+    [SerializeField] private float minZ;
+    [SerializeField] private float maxX;
+    [SerializeField] private float maxZ;
+
     private Animator _playerAnimator;
     private Rigidbody _playerRb;
     private bool _stopMovement;
@@ -43,7 +50,15 @@ public class PlayerMovement : MonoBehaviour
         MovementAnimations(horizontalInput, verticalInput);
 
         Vector3 movementDir = new Vector3(horizontalInput, 0, verticalInput) * Time.deltaTime * movementSpeed;
-        _playerRb.MovePosition(_playerRb.position + movementDir);
+
+        Vector3 position = _playerRb.position + movementDir;
+
+        float clampX = Mathf.Clamp(position.x, minX, maxX);
+        float clampZ = Mathf.Clamp(position.z, minZ, maxZ);
+
+        position = new Vector3(clampX, position.y, clampZ);
+
+        _playerRb.MovePosition(position);
     }
 
     enum FacingDirection { forward, right, backward, left };

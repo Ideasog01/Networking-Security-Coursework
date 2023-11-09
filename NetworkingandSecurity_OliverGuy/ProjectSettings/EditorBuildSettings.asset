@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameplayScene_Multiplayer.unity
     guid: 718b5ece3e5877d4b8a4ca2a3005e672
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 4c4627d185814ac4fa19e4b8566ac0f6
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

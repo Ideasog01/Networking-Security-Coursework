@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -40,6 +41,8 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private int respawnTime;
     [SerializeField] private TextMeshProUGUI eliminationText;
 
+    private List<int> _closedSpawnPositionsList = new List<int>();
+
     private GameObject _playerObj;
 
     private int _respawnTimer;
@@ -69,9 +72,16 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public void LeaveGame()
+    public void LeaveGame() //Via Inspector (Button)
     {
         PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+    }
+
+    public void RestartGame() //Via Inspector (Button)
+    {
+        PhotonNetwork.DestroyAll();
+        PhotonNetwork.LoadLevel("LoadingScene");
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
@@ -88,6 +98,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
                 playerWonText.text = targetPlayer.NickName + " is Victorious!";
             }
 
+            respawnAnimator.SetBool("Respawning", false);
             playerCanvas.enabled = false;
             GameInProgress = false;
         }
@@ -103,16 +114,18 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(GameInProgress);
+            stream.SendNext(_closedSpawnPositionsList);
         }
         else if (stream.IsReading)
         {
             GameInProgress = (bool)stream.ReceiveNext();
+            _closedSpawnPositionsList = (List<int>)stream.ReceiveNext();
         }
     }
 
     public void PlayerDeath(Player player, Player attacker, GameObject attackerObj)
     {
-        if(PhotonNetwork.LocalPlayer == player)
+        if(PhotonNetwork.LocalPlayer == player && GameInProgress)
         {
             _respawnTimer = respawnTime;
             respawnAnimator.SetBool("Respawning", true);
@@ -145,13 +158,36 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             yield return new WaitForSeconds(0.5f);
+
+            int spawnIndex = Random.Range(0, spawnPositionArray.Length - 1);
+
+
+            int attempts = 0;
+            while(_closedSpawnPositionsList.Contains(spawnIndex) && attempts < 100)
+            {
+                spawnIndex = Random.Range(0, spawnPositionArray.Length);
+                attempts++;
+            }
+
+            _closedSpawnPositionsList.Add(spawnIndex);
+            StartCoroutine(RemoveSpawnIndex(spawnIndex));
+
+            Transform spawnPosition = spawnPositionArray[spawnIndex];
+
             _playerObj.transform.GetChild(0).position = spawnPositionArray[Random.Range(0, spawnPositionArray.Length - 1)].position;
+
             cameraTracking.PlayerTransform = _playerObj.transform.GetChild(0);
             _playerObj.transform.GetChild(0).GetComponent<PlayerMovement>().StopMovement = false;
             _playerObj.transform.GetChild(0).GetComponent<MultiplayerHealthController>().ResetPlayer();
             playerCanvas.enabled = true;
             respawnAnimator.SetBool("Respawning", false);
         }
+    }
+
+    private IEnumerator RemoveSpawnIndex(int index)
+    {
+        yield return new WaitForSeconds(8);
+        _closedSpawnPositionsList.Remove(index);
     }
 
     public override void OnLeftRoom()
@@ -161,6 +197,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        SceneManager.LoadScene("GameplayScene_Multiplayer");
+        PhotonNetwork.LoadLevel("MainMenu");
     }
 }
