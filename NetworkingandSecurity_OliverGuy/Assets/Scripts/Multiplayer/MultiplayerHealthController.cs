@@ -82,6 +82,7 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         if (_photonView.IsMine)
         {
             healthSlider.value = _currentHealth;
+            FindFirstObjectByType<MultiplayerLevelManager>().PlayerDeath(PhotonNetwork.LocalPlayer, this.gameObject);
         }
     }
 }

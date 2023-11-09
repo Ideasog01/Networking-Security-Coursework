@@ -5,16 +5,22 @@ using UnityEngine;
 public class CameraTracking : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private float cameraSmoothSpeed = 2f;
 
-    private Vector3 _cameraOffset;
+    [SerializeField] private Vector3 cameraOffset;
 
-    private void Awake()
+    public Transform PlayerTransform
     {
-        _cameraOffset = this.transform.position - playerTransform.position;
+        set { playerTransform = value; }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        this.transform.position = playerTransform.position + _cameraOffset;
+        if(playerTransform != null)
+        {
+            Vector3 targetPosition = playerTransform.position + cameraOffset;
+
+            this.transform.position = Vector3.LerpUnclamped(this.transform.position, targetPosition, Time.deltaTime * cameraSmoothSpeed);
+        }
     }
 }

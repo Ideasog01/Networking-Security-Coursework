@@ -77,6 +77,12 @@ public class Multiplayer : MonoBehaviour
             return;
         }
 
+        if (!MultiplayerLevelManager.GameInProgress)
+        {
+            _playerMovement.StopMovement = true;
+            return;
+        }
+
         if (_isPlayerDisabled)
         {
             return;
