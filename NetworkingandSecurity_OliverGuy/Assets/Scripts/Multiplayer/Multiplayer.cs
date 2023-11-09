@@ -151,7 +151,7 @@ public class Multiplayer : MonoBehaviour
     [PunRPC]
     private void DisablePlayer()
     {
-        if(!_playerHealthController.IsInvulnerable)
+        if(!_playerHealthController.IsInvulnerable && _playerHealthController.CurrentHealth > 0)
         {
             _disableTimer = 5;
             _playerMovement.StopMovement = true;

@@ -16,6 +16,7 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
     private bool _isInvulnerable;
 
     private PhotonView _photonView;
+    private Animator _characterAnimator;
 
     public bool IsInvulnerable
     {
@@ -23,9 +24,15 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         set { _isInvulnerable = value; }
     }
 
+    public int CurrentHealth
+    {
+        get { return _currentHealth; }
+    }
+
     private void Start()
     {
         _photonView = this.GetComponent<PhotonView>();
+        _characterAnimator = this.transform.GetChild(0).GetComponent<Animator>();
 
         if (_photonView.IsMine)
         {
@@ -52,7 +59,7 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
 
     public void TakeDamage(MultiplayerCollisionController collision)
     {
-        if(!_isInvulnerable)
+        if(!_isInvulnerable && _currentHealth > 0)
         {
             _currentHealth -= collision.CollisionDamage;
 
@@ -70,19 +77,23 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
                     collision.Owner.AddScore(1);
                 }
                 
-                ControllerDeath();
+                ControllerDeath(collision);
             }
         }
     }
 
-    public void ControllerDeath()
+    public void ControllerDeath(MultiplayerCollisionController collision)
     {
-        _currentHealth = maxHealth;
-
         if (_photonView.IsMine)
         {
-            healthSlider.value = _currentHealth;
-            FindFirstObjectByType<MultiplayerLevelManager>().PlayerDeath(PhotonNetwork.LocalPlayer, this.gameObject);
+            _characterAnimator.SetBool("isDead", true);
+            FindFirstObjectByType<MultiplayerLevelManager>().PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject);
         }
+    }
+
+    public void ResetPlayer()
+    {
+        _characterAnimator.SetBool("isDead", false);
+        _currentHealth = maxHealth;
     }
 }

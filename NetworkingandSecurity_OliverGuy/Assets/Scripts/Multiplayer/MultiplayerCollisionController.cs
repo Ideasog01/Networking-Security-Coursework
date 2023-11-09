@@ -17,6 +17,7 @@ public class MultiplayerCollisionController : MonoBehaviour
     public Collider OwnerCollider
     {
         set { _ownerCollider = value; }
+        get { return _ownerCollider; }
     }
 
     public int CollisionDamage

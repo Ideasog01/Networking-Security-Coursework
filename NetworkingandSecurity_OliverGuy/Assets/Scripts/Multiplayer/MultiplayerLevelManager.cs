@@ -26,6 +26,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Slider[] abilitySliderArray;
     [SerializeField] private TextMeshProUGUI[] abilityTextArray;
+    [SerializeField] private Canvas playerCanvas;
 
     [Header("Spawning")]
 
@@ -61,10 +62,10 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if(_respawnTimer > 0)
+        if(!playerCanvas.enabled)
         {
             respawnSlider.maxValue = respawnTime;
-            respawnSlider.value = _respawnTimer;
+            respawnSlider.value = Mathf.LerpUnclamped(respawnSlider.value, _respawnTimer, 1);
         }
     }
 
@@ -87,6 +88,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
                 playerWonText.text = targetPlayer.NickName + " is Victorious!";
             }
 
+            playerCanvas.enabled = false;
             GameInProgress = false;
         }
 
@@ -116,6 +118,13 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
             respawnAnimator.SetBool("Respawning", true);
             eliminationText.text = "You were eliminated by " + attacker.NickName;
             cameraTracking.PlayerTransform = attackerObj.transform;
+            _playerObj.transform.GetChild(0).GetComponent<PlayerMovement>().StopMovement = true;
+            playerCanvas.enabled = false;
+
+            respawnSlider.maxValue = respawnTime;
+            respawnSlider.value = _respawnTimer;
+            respawnText.text = _respawnTimer.ToString();
+
             StartCoroutine(RespawnTimer());
         }
         
@@ -135,8 +144,12 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
+            yield return new WaitForSeconds(0.5f);
             _playerObj.transform.GetChild(0).position = spawnPositionArray[Random.Range(0, spawnPositionArray.Length - 1)].position;
             cameraTracking.PlayerTransform = _playerObj.transform.GetChild(0);
+            _playerObj.transform.GetChild(0).GetComponent<PlayerMovement>().StopMovement = false;
+            _playerObj.transform.GetChild(0).GetComponent<MultiplayerHealthController>().ResetPlayer();
+            playerCanvas.enabled = true;
             respawnAnimator.SetBool("Respawning", false);
         }
     }
