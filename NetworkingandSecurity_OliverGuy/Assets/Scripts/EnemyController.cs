@@ -14,11 +14,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float bulletSpeed;
     [SerializeField] private ParticleSystem bulletShotEfx;
 
+    [Header("Disabled")]
+
+    [SerializeField] private ParticleSystem disabledEffect;
+
     private Animator _enemyAnimator;
 
     private Transform _playerTransform;
 
     private float _fireCooldown;
+
+    private float _enemyDisableTimer;
 
     private void Awake()
     {
@@ -28,31 +34,54 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        float distance = Vector3.Distance(this.transform.position, _playerTransform.position);
-
-        if(distance < 12)
+        if(_enemyDisableTimer > 0) //The enemy is disabled
         {
-            this.transform.LookAt(_playerTransform);
-            this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
-
-            if(_fireCooldown <= 0)
+            _enemyDisableTimer -= Time.deltaTime * 1;
+            
+            if(_enemyDisableTimer <= 0)
             {
-                _enemyAnimator.SetTrigger("Primary");
-                _fireCooldown = fireCooldownDuration;
+                Debug.Log("Enemy Enabled");
+                disabledEffect.Stop();
+            }
+        }
+        else
+        {
+            float distance = Vector3.Distance(this.transform.position, _playerTransform.position);
+
+            if (distance < 12)
+            {
+                this.transform.LookAt(_playerTransform);
+                this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
+
+                if (_fireCooldown <= 0)
+                {
+                    _enemyAnimator.SetTrigger("Primary");
+                    _fireCooldown = fireCooldownDuration;
+                }
             }
         }
     }
 
     public void FireBullet()
     {
-        Rigidbody bulletRb = Instantiate(bulletPrefab.GetComponent<Rigidbody>(), bulletSpawn.transform.position, this.transform.rotation);
+        if(_enemyDisableTimer <= 0)
+        {
+            Rigidbody bulletRb = Instantiate(bulletPrefab.GetComponent<Rigidbody>(), bulletSpawn.transform.position, this.transform.rotation);
 
-        bulletRb.transform.forward = this.transform.forward;
-        bulletRb.velocity = bulletRb.transform.forward * bulletSpeed;
+            bulletRb.transform.forward = this.transform.forward;
+            bulletRb.velocity = bulletRb.transform.forward * bulletSpeed;
 
-        bulletShotEfx.Play();
+            bulletShotEfx.Play();
 
-        StartCoroutine(FireCooldown());
+            StartCoroutine(FireCooldown());
+        }
+    }
+
+    public void DisableEnemy(float disableTime)
+    {
+        _enemyDisableTimer = disableTime;
+        disabledEffect.Play();
+        Debug.Log("Enemy Disabled");
     }
 
     private IEnumerator FireCooldown()

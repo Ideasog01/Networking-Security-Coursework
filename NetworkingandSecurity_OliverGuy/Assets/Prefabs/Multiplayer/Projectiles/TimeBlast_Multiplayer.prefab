@@ -5123,14 +5123,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5134771770659622270}
-  - component: {fileID: 3649895252481178948}
+  - component: {fileID: 6725052188518466898}
   - component: {fileID: 8876446725725510860}
-  - component: {fileID: 3209861249193832483}
+  - component: {fileID: 7989635580873611573}
   - component: {fileID: 2722744911043716716}
   - component: {fileID: 272695930927012986}
   - component: {fileID: 3459159470274555800}
   m_Layer: 7
-  m_Name: TimeBlast_Projectile
+  m_Name: TimeBlast_Multiplayer
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5152,7 +5152,7 @@ Transform:
   - {fileID: 3430732304894846155}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3649895252481178948
+--- !u!114 &6725052188518466898
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5161,17 +5161,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5063374146644504822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60095ba2690a7144ba974aff80d647b1, type: 3}
+  m_Script: {fileID: 11500000, guid: a638f4f9279577345acab9bc2c23ba64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionEfxPrefab: {fileID: 1000010321467122, guid: 349851bdec9a2914d982da27aa660468, type: 3}
+  collisionEfxPrefab: {fileID: 4000013952235708, guid: 349851bdec9a2914d982da27aa660468, type: 3}
   collisionDamage: 10
-  objectDuration: 7
+  objectDuration: 10
   collisionEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3209861249193832483}
-        m_TargetAssemblyTypeName: CollisionEffects, Assembly-CSharp
+      - m_Target: {fileID: 7989635580873611573}
+        m_TargetAssemblyTypeName: MultiplayerCollisionEffects, Assembly-CSharp
         m_MethodName: DisableEnemy
         m_Mode: 1
         m_Arguments:
@@ -5195,7 +5195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 7
---- !u!114 &3209861249193832483
+--- !u!114 &7989635580873611573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5204,10 +5204,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5063374146644504822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c2507f9bbc349478ac1c4ddf3a00ae, type: 3}
+  m_Script: {fileID: 11500000, guid: f1eec7422f5edec4882ab9444f0a5aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableTimer: 8
+  disableTimer: 5
 --- !u!135 &2722744911043716716
 SphereCollider:
   m_ObjectHideFlags: 0

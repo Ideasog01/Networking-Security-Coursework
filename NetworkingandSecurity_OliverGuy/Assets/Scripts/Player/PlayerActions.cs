@@ -28,7 +28,7 @@ public class PlayerActions : MonoBehaviour
 
     [Header("Ability 3")]
 
-    [SerializeField] private float ability3ProjectileSpeed;
+    [SerializeField] private int ability3ProjectileSpeed;
     [SerializeField] private Transform ability3ProjectilePrefab;
 
     [Header("Ability Display")]
@@ -131,12 +131,28 @@ public class PlayerActions : MonoBehaviour
 
     public void TimeBlast()
     {
-        Rigidbody projectileRb = Instantiate(ability3ProjectilePrefab.GetComponent<Rigidbody>(), projectileSpawn.transform.position, this.transform.rotation);
+        FollowPath projectile = Instantiate(ability3ProjectilePrefab.GetComponent<FollowPath>(), projectileSpawn.transform.position, this.transform.rotation);
 
-        projectileRb.transform.forward = this.transform.forward;
-        projectileRb.velocity = projectileRb.transform.forward * ability3ProjectileSpeed;
+        projectile.transform.forward = this.transform.forward;
+        projectile.GetComponent<CollisionController>().OwnerCollider = this.GetComponent<Collider>();
 
-        projectileRb.GetComponent<CollisionController>().OwnerCollider = this.GetComponent<Collider>();
+        List<Vector3> pathList = new List<Vector3>();
+        for(int i = 1; i < ability3ProjectileSpeed; i++)
+        {
+            Vector3 pathPoint = (projectileSpawn.position) + projectileSpawn.forward * i;
+
+            if (i > 5)
+            {
+                pathPoint = new Vector3(pathPoint.x + Random.Range(-2, 2), pathPoint.y, pathPoint.z + Random.Range(-2, 2));
+            }
+
+            pathList.Add(pathPoint);
+            GameObject debug = new GameObject();
+            debug.transform.position = pathList[pathList.Count - 1];
+            debug.name = "Debug";
+        }
+
+        projectile.PathList = pathList;
 
         VisualEffectManager.SpawnVisualEffect(primaryVisualEffectPrefab, projectileSpawn.position, this.transform.rotation, 5);
 

@@ -19,6 +19,7 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
 
     public bool IsInvulnerable
     {
+        get { return _isInvulnerable; }
         set { _isInvulnerable = value; }
     }
 

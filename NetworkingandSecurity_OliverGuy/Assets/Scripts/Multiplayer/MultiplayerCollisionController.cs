@@ -1,14 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MultiplayerCollisionController : MonoBehaviour
 {
     [SerializeField] private Transform collisionEfxPrefab;
     [SerializeField] private int collisionDamage;
     [SerializeField] private float objectDuration;
+    [SerializeField] private UnityEvent collisionEvent;
 
     private Photon.Realtime.Player _owner;
     private Collider _ownerCollider;
+
+    private Multiplayer _collisionObj;
 
     public Collider OwnerCollider
     {
@@ -26,6 +30,11 @@ public class MultiplayerCollisionController : MonoBehaviour
         set { _owner = value; }
     }
 
+    public Multiplayer CollisionObj
+    {
+        get { return _collisionObj; }
+    }
+
     private void Awake()
     {
         Destroy(this.gameObject, objectDuration);
@@ -40,8 +49,10 @@ public class MultiplayerCollisionController : MonoBehaviour
 
         if (collision.collider != _ownerCollider)
         {
-            if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
+            if (collision.collider.CompareTag("Player"))
             {
+                _collisionObj = collision.collider.GetComponent<Multiplayer>();
+                collisionEvent.Invoke();
                 collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(this);
             }
 

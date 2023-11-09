@@ -1,20 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CollisionController : MonoBehaviour
 {
     [SerializeField] private GameObject collisionEfxPrefab;
     [SerializeField] private int collisionDamage;
     [SerializeField] private float objectDuration;
-    [SerializeField] private bool destroyOnCollision;
+    [SerializeField] private UnityEvent collisionEvent;
 
     private List<Collider> _colliderList = new List<Collider>();
 
     private Collider _ownerCollider;
 
+    private EnemyController _collisionObj;
+
     public Collider OwnerCollider
     {
         set { _ownerCollider = value; }
+    }
+
+    public EnemyController CollisionObj
+    {
+        get { return _collisionObj; }
     }
 
     private void Awake()
@@ -29,25 +37,25 @@ public class CollisionController : MonoBehaviour
             Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
         }
 
-        if(collision.collider != _ownerCollider && !_colliderList.Contains(collision.collider))
+        if (collision.collider != _ownerCollider && !_colliderList.Contains(collision.collider))
         {
+            if(collision.collider.CompareTag("Enemy"))
+            {
+                _collisionObj = collision.collider.GetComponent<EnemyController>();
+            }
+
             if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy"))
             {
                 collision.collider.GetComponent<HealthController>().TakeDamage(collisionDamage);
             }
 
+            collisionEvent.Invoke();
+
             SpawnBulletEfx();
 
             _colliderList.Add(collision.collider);
 
-            if (destroyOnCollision)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
-            }
+            Destroy(this.gameObject);
         }  
     }
 

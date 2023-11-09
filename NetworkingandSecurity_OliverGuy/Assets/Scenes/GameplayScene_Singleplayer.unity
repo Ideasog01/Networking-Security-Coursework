@@ -659,7 +659,7 @@ MonoBehaviour:
   ability1ProjectileSpeed: 3
   ability1ProjectilePrefab: {fileID: 5134771770659622270, guid: d4053ba85147cf84f9343729d337de16, type: 3}
   shieldVisualEffect: {fileID: 3280519132849329996}
-  ability3ProjectileSpeed: 8
+  ability3ProjectileSpeed: 40
   ability3ProjectilePrefab: {fileID: 5134771770659622270, guid: 25e01fcbcbf6e1743b890da073df0e4d, type: 3}
   abilitySliderArray:
   - {fileID: 765768114}
