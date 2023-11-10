@@ -41,6 +41,9 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private int respawnTime;
     [SerializeField] private TextMeshProUGUI eliminationText;
 
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseCanvas;
+
     private List<int> _closedSpawnPositionsList = new List<int>();
 
     private GameObject _playerObj;
@@ -65,7 +68,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if(!playerCanvas.enabled)
+        if (!playerCanvas.enabled)
         {
             respawnSlider.maxValue = respawnTime;
             respawnSlider.value = Mathf.LerpUnclamped(respawnSlider.value, _respawnTimer, 1);
@@ -141,6 +144,13 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks, IPunObservable
             StartCoroutine(RespawnTimer());
         }
         
+    }
+
+    public void DisplayPauseMenu(bool active)
+    {
+        pauseCanvas.SetActive(active);
+        playerCanvas.enabled = !active;
+        _playerObj.transform.GetChild(0).GetComponent<Multiplayer>().DisablePlayer(active);
     }
 
     private IEnumerator RespawnTimer()

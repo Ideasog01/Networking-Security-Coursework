@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class Multiplayer : MonoBehaviour
 {
+    public bool pauseMenuActive;
+
     [Header("Ability Settings")]
 
     [SerializeField] private float[] abilityCooldownDurations;
@@ -81,6 +83,11 @@ public class Multiplayer : MonoBehaviour
         {
             _playerMovement.StopMovement = true;
             return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            FindFirstObjectByType<MultiplayerLevelManager>().DisplayPauseMenu(true);
         }
 
         if (_isPlayerDisabled)

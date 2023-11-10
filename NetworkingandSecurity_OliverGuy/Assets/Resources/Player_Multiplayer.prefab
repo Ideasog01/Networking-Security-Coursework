@@ -25588,6 +25588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d52b14cc714cf544cb94a1eb07e78f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenuActive: 0
   abilityCooldownDurations:
   - 1
   - 8
