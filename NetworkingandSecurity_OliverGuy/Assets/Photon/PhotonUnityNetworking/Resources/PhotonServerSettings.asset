@@ -46,6 +46,8 @@ MonoBehaviour:
   - DisablePlayer
   - TimeBlast
   - EnablePlayer
+  - UpdateGameTimerDisplay
+  - FindWinner
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
