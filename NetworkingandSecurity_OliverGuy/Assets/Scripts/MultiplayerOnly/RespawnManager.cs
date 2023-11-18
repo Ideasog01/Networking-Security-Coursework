@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Multiplayer
 {
-    public class MultiplayerRespawnManager : MonoBehaviour
+    public class RespawnManager : MonoBehaviour
     {
         [Header("Respawning Display")]
 
@@ -65,16 +65,16 @@ namespace Multiplayer
 
         public void PlayerDeath(Player player, Player attacker, GameObject attackerObj) //When the player has died, the respawn screen needs to display with useful information.
         {
-            if (PhotonNetwork.LocalPlayer == player && MultiplayerGameManager.GameInProgress) //Only display when game is in progress and is a local player
+            if (PhotonNetwork.LocalPlayer == player && GameManager.GameInProgress) //Only display when game is in progress and is a local player
             {
                 _respawnTimer = respawnTime;
                 respawnAnimator.SetBool("Respawning", true);
                 eliminationText.text = "You were eliminated by " + attacker.NickName;
 
-                MultiplayerGameManager.CameraTracking.TargetTransform = attackerObj.transform; //Centres the camera on the attacker for ease of understanding.
+                GameManager.CameraTracking.TargetTransform = attackerObj.transform; //Centres the camera on the attacker for ease of understanding.
 
-                MultiplayerGameManager.MultiplayerPlayerController.PlayerMovement.StopMovement = true;
-                MultiplayerGameManager.MultiplayerPlayerDisplay.PlayerCanvas.enabled = false;
+                GameManager.PlayerController.PlayerMovement.StopMovement = true;
+                GameManager.PlayerDisplay.PlayerCanvas.enabled = false;
 
                 StartCoroutine(RespawnTimer());
             }
@@ -84,7 +84,7 @@ namespace Multiplayer
         {
             yield return new WaitForSeconds(1);
 
-            if (!MultiplayerGameManager.GameInProgress) //If the game is no longer in progress, we do not need to display the respawn screen.
+            if (!GameManager.GameInProgress) //If the game is no longer in progress, we do not need to display the respawn screen.
             {
                 respawnAnimator.SetBool("Respawning", false);
                 respawnCanvas.enabled = false;
@@ -117,13 +117,13 @@ namespace Multiplayer
                 StartCoroutine(RemoveSpawnIndex(spawnIndex)); //Enable the position after several seconds.
 
                 Transform spawnPosition = spawnPositionArray[spawnIndex];
-                MultiplayerGameManager.MultiplayerPlayerController.transform.position = spawnPosition.position;
+                GameManager.PlayerController.transform.position = spawnPosition.position;
 
                 //Reset player properties to default.
-                MultiplayerGameManager.CameraTracking.TargetTransform = MultiplayerGameManager.MultiplayerPlayerController.transform;
-                MultiplayerGameManager.MultiplayerPlayerController.PlayerMovement.StopMovement = false;
-                MultiplayerGameManager.MultiplayerPlayerController.HealthController.ResetPlayer();
-                MultiplayerGameManager.MultiplayerPlayerDisplay.PlayerCanvas.enabled = true;
+                GameManager.CameraTracking.TargetTransform = GameManager.PlayerController.transform;
+                GameManager.PlayerController.PlayerMovement.StopMovement = false;
+                GameManager.PlayerController.HealthController.ResetPlayer();
+                GameManager.PlayerDisplay.PlayerCanvas.enabled = true;
 
                 respawnAnimator.SetBool("Respawning", false);
             }

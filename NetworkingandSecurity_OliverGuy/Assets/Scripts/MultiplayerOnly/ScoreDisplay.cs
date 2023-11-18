@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Multiplayer
 {
-    public class MultiplayerScore : MonoBehaviourPunCallbacks
+    public class ScoreDisplay : MonoBehaviourPunCallbacks
     {
         [SerializeField] private GameObject playerScorePrefab; //Includes a background and text for displaying score on heads-up-display
         [SerializeField] private Transform panel; //The parent for all score display objects

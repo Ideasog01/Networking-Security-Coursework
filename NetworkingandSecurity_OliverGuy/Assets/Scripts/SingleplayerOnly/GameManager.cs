@@ -5,16 +5,18 @@ namespace Singleplayer
 {
     public class GameManager : MonoBehaviour
     {
+        public static PlayerController PlayerController;
+
         [SerializeField] private int enemyCount; //The current number of enemies still alive
 
         [SerializeField] private TextMeshProUGUI enemyCountText;
 
         [SerializeField] private GameObject victoryCanvas;
 
-        [SerializeField] private PlayerController playerController;
-
         private void Start()
         {
+            PlayerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
             enemyCountText.text = "Enemies Remaining: " + enemyCount.ToString();
             HealthController.OnEnemyKilled += OnEnemyKilledAction;
         }
@@ -27,7 +29,7 @@ namespace Singleplayer
             if (enemyCount <= 0) //When all enemies have been defeated display end screen and disable player.
             {
                 victoryCanvas.SetActive(true);
-                playerController.DisablePlayer(true);
+                PlayerController.DisablePlayer(true);
             }
         }
     }

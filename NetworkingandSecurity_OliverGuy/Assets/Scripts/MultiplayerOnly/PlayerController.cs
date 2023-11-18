@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Multiplayer
 {
-    public class MultiplayerPlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         public bool pauseMenuActive;
 
@@ -41,7 +41,7 @@ namespace Multiplayer
 
         //Player Components
         private PlayerMovement _playerMovement;
-        private MultiplayerHealthController _playerHealthController;
+        private HealthController _playerHealthController;
         private Animator _playerAnimator;
         private PhotonView _photonView;
 
@@ -55,7 +55,7 @@ namespace Multiplayer
             get { return _playerMovement; }
         }
 
-        public MultiplayerHealthController HealthController
+        public HealthController HealthController
         {
             get { return _playerHealthController; }
         }
@@ -68,7 +68,7 @@ namespace Multiplayer
         {
             //Initialise Player Components
             _playerMovement = this.GetComponent<PlayerMovement>();
-            _playerHealthController = this.GetComponent<MultiplayerHealthController>();
+            _playerHealthController = this.GetComponent<HealthController>();
             _playerAnimator = this.transform.GetChild(0).GetComponent<Animator>();
             _photonView = this.GetComponent<PhotonView>();
 
@@ -86,13 +86,13 @@ namespace Multiplayer
                     _playerMovement.UpdateRotation(); //Updates the rotation to follow the mouse cursor.
                 }
 
-                if (!MultiplayerGameManager.GameInProgress)
+                if (!GameManager.GameInProgress)
                 {
                     _playerMovement.StopMovement = true; //Do not allow the player to move if the game is no longer in progress
                 }
                 else if (Input.GetKeyDown(KeyCode.Escape)) //Pause menu does not affect other players or the gamemode state.
                 {
-                    FindFirstObjectByType<MultiplayerGameManager>().DisplayPauseMenu(true);
+                    FindFirstObjectByType<GameManager>().DisplayPauseMenu(true);
                 }
             }
         }
@@ -162,8 +162,9 @@ namespace Multiplayer
             projectileRb.transform.forward = this.transform.forward;
             projectileRb.velocity = projectileRb.transform.forward * primaryProjectileSpeed;
 
-            projectileRb.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
-            projectileRb.GetComponent<MultiplayerCollisionController>().OwnerCollider = this.GetComponent<Collider>();
+            CollisionController collisionController = projectileRb.GetComponent<CollisionController>();
+            collisionController.Owner = _photonView.Owner;
+            collisionController.OwnerCollider = this.GetComponent<Collider>();
 
             //Apply ability cooldown based on assigned duration
             _abilityCooldowns[0] = abilityCooldownDurations[0];
@@ -179,8 +180,9 @@ namespace Multiplayer
             projectileRb.transform.forward = this.transform.forward;
             projectileRb.velocity = projectileRb.transform.forward * ability1ProjectileSpeed;
 
-            projectileRb.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
-            projectileRb.GetComponent<MultiplayerCollisionController>().OwnerCollider = this.GetComponent<Collider>();
+            CollisionController collisionController = projectileRb.GetComponent<CollisionController>();
+            collisionController.Owner = _photonView.Owner;
+            collisionController.OwnerCollider = this.GetComponent<Collider>();
 
             //Apply ability cooldown based on assigned duration
             _abilityCooldowns[1] = abilityCooldownDurations[1];
@@ -211,8 +213,9 @@ namespace Multiplayer
 
             projectile.transform.forward = this.transform.forward;
 
-            projectile.GetComponent<MultiplayerCollisionController>().Owner = _photonView.Owner;
-            projectile.GetComponent<MultiplayerCollisionController>().OwnerCollider = this.GetComponent<Collider>();
+            CollisionController collisionController = projectile.GetComponent<CollisionController>();
+            collisionController.Owner = _photonView.Owner;
+            collisionController.OwnerCollider = this.GetComponent<Collider>();
 
             List<Vector3> pathList = new List<Vector3>();
             for (int i = 1; i < ability3ProjectileSpeed; i++)
@@ -246,7 +249,7 @@ namespace Multiplayer
             yield return new WaitForSeconds(0.1f);
             _abilityCooldowns[abilityIndex] -= 0.1f;
 
-            MultiplayerGameManager.MultiplayerPlayerDisplay.UpdateCooldownDisplay(abilityIndex, abilityCooldownDurations[abilityIndex], _abilityCooldowns[abilityIndex]);
+            GameManager.PlayerDisplay.UpdateCooldownDisplay(abilityIndex, abilityCooldownDurations[abilityIndex], _abilityCooldowns[abilityIndex]);
 
             if (_abilityCooldowns[abilityIndex] > 0)
             {

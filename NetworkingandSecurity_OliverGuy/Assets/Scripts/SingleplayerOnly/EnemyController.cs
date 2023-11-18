@@ -31,11 +31,16 @@ namespace Singleplayer
         private void Awake()
         {
             _enemyAnimator = this.transform.GetChild(0).GetComponent<Animator>();
-            _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            _playerTransform = GameObject.Find("Player").transform;
         }
 
         private void Update()
         {
+            if(GameManager.PlayerController.HealthController.CurrentHealth <= 0)
+            {
+                return;
+            }
+
             if (_enemyDisableTimer > 0) //The enemy is disabled so cannot attack
             {
                 _enemyDisableTimer -= Time.deltaTime * 1;

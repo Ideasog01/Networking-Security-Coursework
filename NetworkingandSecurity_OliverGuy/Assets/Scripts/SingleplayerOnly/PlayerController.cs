@@ -47,6 +47,11 @@ namespace Singleplayer
 
         private bool _isPlayerDisabled;
 
+        public HealthController HealthController
+        {
+            get { return _playerHealthController; }
+        }
+
         #region Core
 
         private void Awake()

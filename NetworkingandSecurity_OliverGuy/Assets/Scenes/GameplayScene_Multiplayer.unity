@@ -9057,7 +9057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa41f2e0815feea4caee30707f630266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 0}
+  targetTransform: {fileID: 0}
   cameraSmoothSpeed: 3
   cameraOffset: {x: 0, y: 10, z: -4.25}
   minX: -11
@@ -14691,17 +14691,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc1ebf098fdfb94ba65153d6cd412aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnCanvas: {fileID: 904534586}
   respawnTimerText: {fileID: 602532050}
   respawnSlider: {fileID: 1415246328}
   eliminationText: {fileID: 1727572980}
-  respawnCanvas: {fileID: 904534586}
+  respawnTime: 5
+  respawnAnimator: {fileID: 904534588}
   spawnPositionArray:
   - {fileID: 239700526}
   - {fileID: 854871518}
   - {fileID: 220010124}
   - {fileID: 5485360}
-  respawnTime: 5
-  respawnAnimator: {fileID: 904534588}
 --- !u!114 &1732441165
 MonoBehaviour:
   m_ObjectHideFlags: 0

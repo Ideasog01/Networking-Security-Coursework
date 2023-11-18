@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace Multiplayer
 {
-    public class MultiplayerCollisionEffects : MonoBehaviour //Collision effects refers to status effects, such as disabling the player
+    public class CollisionEffects : MonoBehaviour //Collision effects refers to status effects, such as disabling the player
     {
-        private MultiplayerCollisionController _collisionController; //The collision controller that handles all collisions (Another component on this object)
+        private CollisionController _collisionController; //The collision controller that handles all collisions (Another component on this object)
 
         private void Awake()
         {
-            _collisionController = this.GetComponent<MultiplayerCollisionController>();
+            _collisionController = this.GetComponent<CollisionController>();
         }
 
         public void DisableEnemy() //Called by Animation Event

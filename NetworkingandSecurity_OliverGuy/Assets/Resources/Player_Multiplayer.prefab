@@ -25546,9 +25546,9 @@ GameObject:
   - component: {fileID: 5141690146782319838}
   - component: {fileID: 7440309469798879878}
   - component: {fileID: 5081167438345380407}
+  - component: {fileID: 8298499886184655168}
   - component: {fileID: 4839026525774877820}
   - component: {fileID: 9128219577112865967}
-  - component: {fileID: 8298499886184655168}
   m_Layer: 2
   m_Name: Player_Multiplayer
   m_TagString: Player
@@ -25602,8 +25602,10 @@ MonoBehaviour:
   ability1ProjectileSpeed: 3
   ability1ProjectilePrefab: {fileID: 5134771770659622270, guid: 9b43c7d472cb0fd44a03df5f50939716, type: 3}
   shieldVisualEffect: {fileID: 4874193963945075277}
+  shieldDuration: 7
   ability3ProjectileSpeed: 40
   ability3ProjectilePrefab: {fileID: 5134771770659622270, guid: 286283d9bc2b91f4195792fefb01ffb3, type: 3}
+  disableTimeDuration: 5
 --- !u!114 &5141690146782319838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25639,7 +25641,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  isEnemy: 0
   healthSlider: {fileID: 227415695223882310}
 --- !u!54 &5081167438345380407
 Rigidbody:
@@ -25668,6 +25669,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 2
+--- !u!136 &8298499886184655168
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3244322033913963920}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4839026525774877820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25709,29 +25733,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!136 &8298499886184655168
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3244322033913963920}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &3375568641993313246
 GameObject:
   m_ObjectHideFlags: 0
@@ -41816,8 +41817,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2360982879841030726}
-        m_TargetAssemblyTypeName: Multiplayer, Assembly-CSharp
-        m_MethodName: ActivateAbility
+        m_TargetAssemblyTypeName: Multiplayer.PlayerController, Assembly-CSharp
+        m_MethodName: ActivateNetworkFunction
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -41831,8 +41832,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2360982879841030726}
-        m_TargetAssemblyTypeName: Multiplayer, Assembly-CSharp
-        m_MethodName: ActivateAbility
+        m_TargetAssemblyTypeName: Multiplayer.PlayerController, Assembly-CSharp
+        m_MethodName: ActivateNetworkFunction
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -41846,8 +41847,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2360982879841030726}
-        m_TargetAssemblyTypeName: Multiplayer, Assembly-CSharp
-        m_MethodName: ActivateAbility
+        m_TargetAssemblyTypeName: Multiplayer.PlayerController, Assembly-CSharp
+        m_MethodName: ActivateNetworkFunction
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -41861,8 +41862,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2360982879841030726}
-        m_TargetAssemblyTypeName: Multiplayer, Assembly-CSharp
-        m_MethodName: ActivateAbility
+        m_TargetAssemblyTypeName: Multiplayer.PlayerController, Assembly-CSharp
+        m_MethodName: ActivateNetworkFunction
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace Multiplayer
 {
-    public class MultiplayerCollisionController : MonoBehaviour //Responsible for detecting collisions
+    public class CollisionController : MonoBehaviour //Responsible for detecting collisions
     {
         [SerializeField] private Transform collisionEfxPrefab; //The prefab instantiated for visual effect when collision occurs
         [SerializeField] private int collisionDamage; //The damage to apply to the object if another player is hit
@@ -12,7 +12,7 @@ namespace Multiplayer
 
         private Photon.Realtime.Player _owner; //The player that launched this projectile
         private Collider _ownerCollider;
-        private MultiplayerPlayerController _collisionPlayer;
+        private PlayerController _collisionPlayer;
 
         #region Properties
 
@@ -33,7 +33,7 @@ namespace Multiplayer
             set { _owner = value; }
         }
 
-        public MultiplayerPlayerController CollisionPlayer
+        public PlayerController CollisionPlayer
         {
             get { return _collisionPlayer; }
         }
@@ -59,7 +59,7 @@ namespace Multiplayer
                 if (collision.collider.CompareTag("Player"))
                 {
                     collisionEvent.Invoke(); //Potential collision events could include applying disabling effects, or enabling visual effects
-                    collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(this);
+                    collision.collider.GetComponent<HealthController>().TakeDamage(this);
                 }
 
                 //Display collision effect

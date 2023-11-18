@@ -1049,6 +1049,7 @@ MonoBehaviour:
   ability1ProjectileSpeed: 3
   ability1ProjectilePrefab: {fileID: 5134771770659622270, guid: d4053ba85147cf84f9343729d337de16, type: 3}
   shieldVisualEffect: {fileID: 3280519132849329996}
+  shieldDuration: 7
   ability3ProjectileSpeed: 40
   ability3ProjectilePrefab: {fileID: 5134771770659622270, guid: 25e01fcbcbf6e1743b890da073df0e4d, type: 3}
   abilitySliderArray:
@@ -5340,7 +5341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa41f2e0815feea4caee30707f630266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 133174376}
+  targetTransform: {fileID: 133174376}
   cameraSmoothSpeed: 3
   cameraOffset: {x: 0, y: 10, z: -4.25}
   minX: -11
@@ -9908,7 +9909,6 @@ MonoBehaviour:
   enemyCount: 4
   enemyCountText: {fileID: 1658105669}
   victoryCanvas: {fileID: 1968536664}
-  playerActions: {fileID: 133174380}
 --- !u!4 &1919212056
 Transform:
   m_ObjectHideFlags: 0
@@ -34027,8 +34027,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 133174380}
-        m_TargetAssemblyTypeName: PlayerActions, Assembly-CSharp
-        m_MethodName: FireBullet
+        m_TargetAssemblyTypeName: Singleplayer.PlayerController, Assembly-CSharp
+        m_MethodName: PrimaryAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35061,7 +35061,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1369019435}
   - {fileID: 963194228}
-  - {fileID: 133174376}
   - {fileID: 499881732}
+  - {fileID: 133174376}
   - {fileID: 1379099567}
   - {fileID: 2089679110}

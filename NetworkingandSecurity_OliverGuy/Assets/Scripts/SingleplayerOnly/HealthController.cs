@@ -31,6 +31,11 @@ namespace Singleplayer
             set { _isInvulnerable = value; }
         }
 
+        public int CurrentHealth
+        {
+            get { return _currentHealth; }
+        }
+
         //Setup initial display of health
         private void Awake()
         {
@@ -62,10 +67,6 @@ namespace Singleplayer
             if (isEnemy && OnEnemyKilled != null)
             {
                 OnEnemyKilled.Invoke();
-            }
-            else
-            {
-                Debug.Log("Enemy Killed event was null");
             }
 
             this.gameObject.SetActive(false);

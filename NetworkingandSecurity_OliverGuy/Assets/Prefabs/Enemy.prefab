@@ -16823,11 +16823,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f60c5cb660fd714ba56c65d87f03816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 7060968653208104756, guid: 4755ac5241fdab14ba82a10da873115d, type: 3}
-  bulletSpawn: {fileID: 4031892225060397781}
+  projectilePrefab: {fileID: 7060968653208104756, guid: 4755ac5241fdab14ba82a10da873115d, type: 3}
+  projectileSpawn: {fileID: 4031892225060397781}
   fireCooldownDuration: 2
-  bulletSpeed: 12
-  bulletShotEfx: {fileID: 198000011456477012, guid: f70d27f5cf28c8941bbfd6febd74797f, type: 3}
+  projectileSpeed: 7
+  projectileShotEfx: {fileID: 1796728459138496874}
   disabledEffect: {fileID: 938298881380886564}
 --- !u!114 &7037840143118906456
 MonoBehaviour:

@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace Multiplayer
 {
-    public class MultiplayerCharacterAnimations : MonoBehaviour
+    public class CharacterAnimations : MonoBehaviour
     {
         //The events to be called with each ability animation. Allows for abilities to be synced to the character's movements.
         [SerializeField] private UnityEvent primaryEvent;

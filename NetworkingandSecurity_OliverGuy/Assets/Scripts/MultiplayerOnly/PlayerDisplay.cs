@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Multiplayer
 {
-    public class MultiplayerPlayerDisplay : MonoBehaviour
+    public class PlayerDisplay : MonoBehaviour
     {
         [Header("HUD")]
 

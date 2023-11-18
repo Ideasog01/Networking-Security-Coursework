@@ -8,13 +8,13 @@ using UnityEngine.SceneManagement;
 
 namespace Multiplayer
 {
-    public class MultiplayerGameManager : MonoBehaviourPunCallbacks, IPunObservable
+    public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         //Allows for global access across multiple scripts
         public static MultiplayerChatDisplay MultiplayerChatDisplay;
-        public static MultiplayerRespawnManager MultiplayerRespawnManager;
-        public static MultiplayerPlayerDisplay MultiplayerPlayerDisplay;
-        public static MultiplayerPlayerController MultiplayerPlayerController;
+        public static RespawnManager RespawnManager;
+        public static PlayerDisplay PlayerDisplay;
+        public static PlayerController PlayerController;
         public static CameraTracking CameraTracking;
 
         public static bool GameInProgress;
@@ -43,17 +43,17 @@ namespace Multiplayer
         {
             //Assign global scripts
             MultiplayerChatDisplay = this.GetComponent<MultiplayerChatDisplay>();
-            MultiplayerRespawnManager = this.GetComponent<MultiplayerRespawnManager>();
-            MultiplayerPlayerDisplay = this.GetComponent<MultiplayerPlayerDisplay>();
+            RespawnManager = this.GetComponent<RespawnManager>();
+            PlayerDisplay = this.GetComponent<PlayerDisplay>();
             CameraTracking = Camera.main.GetComponent<CameraTracking>();
 
             GameInProgress = true;
             _matchTimer = 0;
 
             //Instantiate the player and assign all neccessary values
-            GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", MultiplayerRespawnManager.SpawnPositionArray[PhotonNetwork.LocalPlayer.ActorNumber].position, Quaternion.identity);
-            MultiplayerPlayerController = obj.transform.GetChild(0).GetComponent<MultiplayerPlayerController>();
-            CameraTracking.TargetTransform = MultiplayerPlayerController.transform;
+            GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", RespawnManager.SpawnPositionArray[PhotonNetwork.LocalPlayer.ActorNumber].position, Quaternion.identity);
+            PlayerController = obj.transform.GetChild(0).GetComponent<PlayerController>();
+            CameraTracking.TargetTransform = PlayerController.transform;
             _photonView = this.GetComponent<PhotonView>();
             PhotonNetwork.LocalPlayer.SetScore(0); //In case the score value still persists from a previous match
 
@@ -100,7 +100,7 @@ namespace Multiplayer
         {
             if (targetPlayer.IsLocal)
             {
-                MultiplayerPlayerDisplay.UpdateEliminationDisplay(targetPlayer.GetScore(), maxScore); //Update the score display
+                PlayerDisplay.UpdateEliminationDisplay(targetPlayer.GetScore(), maxScore); //Update the score display
 
                 if (targetPlayer.GetScore() == maxScore) //If the score reached maximum, declare the winner on all clients
                 {
@@ -171,8 +171,8 @@ namespace Multiplayer
         public void DisplayPauseMenu(bool active) //Note that the pause menu does NOT pause the entire match. It only disables the player movement and abilities.
         {
             pauseCanvas.SetActive(active);
-            MultiplayerPlayerDisplay.PlayerCanvas.enabled = !active;
-            MultiplayerPlayerController.DisablePlayerActions(active);
+            PlayerDisplay.PlayerCanvas.enabled = !active;
+            PlayerController.DisablePlayerActions(active);
         }
 
         private void DisplayEndScreen(Player winner)
@@ -197,7 +197,7 @@ namespace Multiplayer
                 restartGameButtons[2].SetActive(PhotonNetwork.IsMasterClient);
             }
 
-            MultiplayerPlayerDisplay.PlayerCanvas.enabled = false; //Display the heads-up-display
+            PlayerDisplay.PlayerCanvas.enabled = false; //Display the heads-up-display
         }
 
         #endregion
@@ -221,7 +221,7 @@ namespace Multiplayer
             yield return new WaitForSeconds(1);
             _matchTimer--;
 
-            MultiplayerPlayerDisplay.UpdateTimerDisplay(_matchTimer);
+            PlayerDisplay.UpdateTimerDisplay(_matchTimer);
 
             //Repeat the process of decreasing the timer and displaying the remaining time until the timer runs out.
             if (_matchTimer <= 0)
@@ -243,7 +243,7 @@ namespace Multiplayer
             {
                 StopAllCoroutines();
                 GameInProgress = false;
-                MultiplayerRespawnManager.RespawnCanvas.enabled = false; //Disable the respawn canvas (in the case that the local player is that last player that died).
+                RespawnManager.RespawnCanvas.enabled = false; //Disable the respawn canvas (in the case that the local player is that last player that died).
 
                 _matchTimer = 0;
 

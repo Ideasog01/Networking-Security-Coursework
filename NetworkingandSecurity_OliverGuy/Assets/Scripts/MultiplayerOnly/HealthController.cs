@@ -2,11 +2,10 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.UI;
-using Multiplayer;
 
 namespace Multiplayer
 {
-    public class MultiplayerHealthController : MonoBehaviour, IPunObservable
+    public class HealthController : MonoBehaviour, IPunObservable
     {
         [Header("Statistics")]
 
@@ -48,7 +47,7 @@ namespace Multiplayer
 
             if (_photonView.IsMine)
             {
-                healthSlider = MultiplayerGameManager.MultiplayerPlayerDisplay.HealthSlider; //Assign to HUD Slider
+                healthSlider = GameManager.PlayerDisplay.HealthSlider; //Assign to HUD Slider
             }
             else
             {
@@ -75,7 +74,7 @@ namespace Multiplayer
 
         #region Apply Health
 
-        public void TakeDamage(MultiplayerCollisionController collision)
+        public void TakeDamage(CollisionController collision)
         {
             if (!_isInvulnerable && _currentHealth > 0)
             {
@@ -114,12 +113,12 @@ namespace Multiplayer
 
         #region Player Death & Respawn
 
-        public void ControllerDeath(MultiplayerCollisionController collision)
+        public void ControllerDeath(CollisionController collision)
         {
             if (_photonView.IsMine)
             {
                 _characterAnimator.SetBool("isDead", true); //Plays death animation
-                MultiplayerGameManager.MultiplayerRespawnManager.PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject); //Initiates the respawn display for the local player
+                GameManager.RespawnManager.PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject); //Initiates the respawn display for the local player
             }
         }
 
