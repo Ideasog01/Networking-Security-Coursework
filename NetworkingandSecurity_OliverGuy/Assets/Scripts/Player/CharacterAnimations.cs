@@ -1,37 +1,42 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CharacterAnimations : MonoBehaviour
+namespace Singleplayer
 {
-    [SerializeField] private UnityEvent primaryEvent;
-    [SerializeField] private UnityEvent ability1Event;
-    [SerializeField] private UnityEvent ability2Event;
-    [SerializeField] private UnityEvent ability3Event;
-
-    [SerializeField] private UnityEvent enableMovement;
-
-    public void Primary()
+    public class CharacterAnimations : MonoBehaviour
     {
-        primaryEvent.Invoke();
-    }
+        [SerializeField] private UnityEvent primaryEvent;
+        [SerializeField] private UnityEvent ability1Event;
+        [SerializeField] private UnityEvent ability2Event;
+        [SerializeField] private UnityEvent ability3Event;
 
-    public void EnableMovement()
-    {
-        enableMovement.Invoke();
-    }
+        [SerializeField] private UnityEvent enableMovement;
 
-    public void Ability1()
-    {
-        ability1Event.Invoke();
-    }
+        //These functions are called by the animation as an event. The invoked events below will have assigned the corresponding ability functions in the player controller script.
 
-    public void Ability2()
-    {
-        ability2Event.Invoke();
-    }
+        public void Primary()
+        {
+            primaryEvent.Invoke();
+        }
 
-    public void Ability3()
-    {
-        ability3Event.Invoke();
+        public void EnableMovement()
+        {
+            enableMovement.Invoke();
+        }
+
+        public void Ability1()
+        {
+            ability1Event.Invoke();
+        }
+
+        public void Ability2()
+        {
+            ability2Event.Invoke();
+        }
+
+        public void Ability3()
+        {
+            ability3Event.Invoke();
+        }
     }
 }

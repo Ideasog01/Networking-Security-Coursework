@@ -83,6 +83,7 @@ namespace Multiplayer
                 if(!_isPlayerDisabled)
                 {
                     PlayerGameplayInput(); //As long as the player is enabled, they can perform abilities (if not on cooldown).
+                    _playerMovement.UpdateRotation(); //Updates the rotation to follow the mouse cursor.
                 }
 
                 if (!MultiplayerGameManager.GameInProgress)
@@ -140,8 +141,6 @@ namespace Multiplayer
                     PlayAbilityAnimation("Ability3");
                     _abilityCooldowns[3] = abilityCooldownDurations[3];
                 }
-
-                _playerMovement.UpdateRotation(); //Updates the rotation to follow the mouse cursor.
             }
         }
 
@@ -199,6 +198,7 @@ namespace Multiplayer
         private IEnumerator CancelShield() //Cancel the player's immunity to damage after a duration. Note that the visual effect duration is assigned inside the inspector on the corresponding particle system component.
         {
             yield return new WaitForSeconds(shieldDuration);
+            _abilityCooldowns[1] = abilityCooldownDurations[2];
             StartCoroutine(AbilityCooldown(2)); //Now start the shield ability cooldown.
             _playerHealthController.IsInvulnerable = false;
         }

@@ -71,7 +71,7 @@ namespace Multiplayer
                 respawnAnimator.SetBool("Respawning", true);
                 eliminationText.text = "You were eliminated by " + attacker.NickName;
 
-                MultiplayerGameManager.CameraTracking.PlayerTransform = attackerObj.transform; //Centres the camera on the attacker for ease of understanding.
+                MultiplayerGameManager.CameraTracking.TargetTransform = attackerObj.transform; //Centres the camera on the attacker for ease of understanding.
 
                 MultiplayerGameManager.MultiplayerPlayerController.PlayerMovement.StopMovement = true;
                 MultiplayerGameManager.MultiplayerPlayerDisplay.PlayerCanvas.enabled = false;
@@ -120,7 +120,7 @@ namespace Multiplayer
                 MultiplayerGameManager.MultiplayerPlayerController.transform.position = spawnPosition.position;
 
                 //Reset player properties to default.
-                MultiplayerGameManager.CameraTracking.PlayerTransform = MultiplayerGameManager.MultiplayerPlayerController.transform;
+                MultiplayerGameManager.CameraTracking.TargetTransform = MultiplayerGameManager.MultiplayerPlayerController.transform;
                 MultiplayerGameManager.MultiplayerPlayerController.PlayerMovement.StopMovement = false;
                 MultiplayerGameManager.MultiplayerPlayerController.HealthController.ResetPlayer();
                 MultiplayerGameManager.MultiplayerPlayerDisplay.PlayerCanvas.enabled = true;

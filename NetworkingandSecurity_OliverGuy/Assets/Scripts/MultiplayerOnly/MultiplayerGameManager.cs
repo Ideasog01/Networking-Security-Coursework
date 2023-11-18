@@ -53,7 +53,7 @@ namespace Multiplayer
             //Instantiate the player and assign all neccessary values
             GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", MultiplayerRespawnManager.SpawnPositionArray[PhotonNetwork.LocalPlayer.ActorNumber].position, Quaternion.identity);
             MultiplayerPlayerController = obj.transform.GetChild(0).GetComponent<MultiplayerPlayerController>();
-            CameraTracking.PlayerTransform = MultiplayerPlayerController.transform;
+            CameraTracking.TargetTransform = MultiplayerPlayerController.transform;
             _photonView = this.GetComponent<PhotonView>();
             PhotonNetwork.LocalPlayer.SetScore(0); //In case the score value still persists from a previous match
 

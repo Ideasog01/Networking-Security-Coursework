@@ -3,14 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public string sceneName;
+    public string sceneName; //The script will load the given scene by name
 
-    public void LoadScene()
+    public void LoadScene() //Via Inspector (Button)
     {
         SceneManager.LoadScene(sceneName);
     }
 
-    public void QuitApplication()
+    public void QuitApplication() //Via Inspector (Button)
     {
         Application.Quit();
     }
