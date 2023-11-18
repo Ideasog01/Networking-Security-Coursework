@@ -25604,8 +25604,6 @@ MonoBehaviour:
   shieldVisualEffect: {fileID: 4874193963945075277}
   ability3ProjectileSpeed: 40
   ability3ProjectilePrefab: {fileID: 5134771770659622270, guid: 286283d9bc2b91f4195792fefb01ffb3, type: 3}
-  abilitySliderArray: []
-  abilityTextArray: []
 --- !u!114 &5141690146782319838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41889,7 +41887,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _photonView: {fileID: 4839026525774877820}
 --- !u!114 &4746150673818814528
 MonoBehaviour:
   m_ObjectHideFlags: 0

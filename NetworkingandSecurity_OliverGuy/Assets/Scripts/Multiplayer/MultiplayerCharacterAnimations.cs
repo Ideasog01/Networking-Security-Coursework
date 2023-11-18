@@ -1,62 +1,71 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MultiplayerCharacterAnimations : MonoBehaviour
+namespace Multiplayer
 {
-    [SerializeField] private UnityEvent primaryEvent;
-    [SerializeField] private UnityEvent ability1Event;
-    [SerializeField] private UnityEvent ability2Event;
-    [SerializeField] private UnityEvent ability3Event;
-
-    [SerializeField] private UnityEvent enableMovement;
-
-    [SerializeField] private PhotonView _photonView;
-
-    private void Awake()
+    public class MultiplayerCharacterAnimations : MonoBehaviour
     {
-        _photonView = this.transform.parent.GetComponent<PhotonView>();
-    }
+        //The events to be called with each ability animation. Allows for abilities to be synced to the character's movements.
+        [SerializeField] private UnityEvent primaryEvent;
+        [SerializeField] private UnityEvent ability1Event;
+        [SerializeField] private UnityEvent ability2Event;
+        [SerializeField] private UnityEvent ability3Event;
 
-    public void Primary()
-    {
-        if(_photonView.IsMine)
+        //Allows the animation to have control over when movement is enabled for a smoother gameplay experience.
+        [SerializeField] private UnityEvent enableMovement;
+
+        private PhotonView _photonView;
+
+        private void Awake()
         {
-            primaryEvent.Invoke();
+            _photonView = this.transform.parent.GetComponent<PhotonView>();
         }
-    }
 
-    public void EnableMovement()
-    {
-        if (_photonView.IsMine)
+        #region AbilityEvents
+
+        //These functions are called by the animation as an event. The invoked events below will have assigned the corresponding ability functions in the player controller script.
+
+        public void Primary()
         {
-            enableMovement.Invoke();
+            if (_photonView.IsMine)
+            {
+                primaryEvent.Invoke();
+            }
         }
-    }
 
-    public void Ability1()
-    {
-        if (_photonView.IsMine)
+        public void Ability1()
         {
-            ability1Event.Invoke();
+            if (_photonView.IsMine)
+            {
+                ability1Event.Invoke();
+            }
         }
-    }
 
-    public void Ability2()
-    {
-        if (_photonView.IsMine)
+        public void Ability2()
         {
-            ability2Event.Invoke();
+            if (_photonView.IsMine)
+            {
+                ability2Event.Invoke();
+            }
         }
-    }
 
-    public void Ability3()
-    {
-        if (_photonView.IsMine)
+        public void Ability3()
         {
-            ability3Event.Invoke();
+            if (_photonView.IsMine)
+            {
+                ability3Event.Invoke();
+            }
+        }
+
+        #endregion
+
+        public void EnableMovement()
+        {
+            if (_photonView.IsMine)
+            {
+                enableMovement.Invoke();
+            }
         }
     }
 }

@@ -1,16 +1,28 @@
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class RoomEntry : MonoBehaviour
+namespace Multiplayer
 {
-    public TextMeshProUGUI roomText;
-    public string roomName;
-
-    public void JoinRoom()
+    public class RoomEntry : MonoBehaviour
     {
-        PhotonNetwork.LeaveLobby();
-        PhotonNetwork.JoinRoom(roomName);
+        [SerializeField] private TextMeshProUGUI roomNameText; //Displays the name of the room and the room's current player count
+        [SerializeField] private string roomName;
+
+        public TextMeshProUGUI RoomNameText
+        {
+            get { return roomNameText; }
+        }
+
+        public string RoomName
+        {
+            set { roomName = value; }
+        }
+
+        public void JoinRoom()
+        {
+            PhotonNetwork.LeaveLobby();
+            PhotonNetwork.JoinRoom(roomName); //Joins the room the player clicked on from the room list display
+        }
     }
 }

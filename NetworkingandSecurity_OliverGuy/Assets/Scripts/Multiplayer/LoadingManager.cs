@@ -1,21 +1,25 @@
 using Photon.Pun;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class LoadingManager : MonoBehaviourPunCallbacks
+namespace Multiplayer
 {
-    private void Start()
+    public class LoadingManager : MonoBehaviourPunCallbacks
     {
-        if(PhotonNetwork.MasterClient == PhotonNetwork.LocalPlayer)
+        private void Start()
         {
-            StartCoroutine(DelayReload());   
+            if (PhotonNetwork.MasterClient == PhotonNetwork.LocalPlayer) //We only want to load the gameplay scene when this is the MasterClient (The scene will be loaded across the network)
+            {
+                StartCoroutine(DelayReload());
+            }
+        }
+
+        private IEnumerator DelayReload()
+        {
+            yield return new WaitForSeconds(2); //A delay is required as we need to ensure all players have entered the loading scene. 'PhotonNetwork.LoadLevel' is not instantaneous due to latency.
+            PhotonNetwork.LoadLevel("GameplayScene_Multiplayer"); //Loads the given scene on all clients.
         }
     }
-
-    private IEnumerator DelayReload()
-    {
-        yield return new WaitForSeconds(2);
-        PhotonNetwork.LoadLevel("GameplayScene_Multiplayer"); //Loads the given scene on all clients
-    }
 }
+
+

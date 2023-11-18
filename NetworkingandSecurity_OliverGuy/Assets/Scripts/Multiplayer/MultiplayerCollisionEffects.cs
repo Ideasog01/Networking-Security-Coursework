@@ -1,23 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiplayerCollisionEffects : MonoBehaviour
+namespace Multiplayer
 {
-    [SerializeField] private float disableTimer;
-
-    private MultiplayerCollisionController _collisionController;
-
-    private void Awake()
+    public class MultiplayerCollisionEffects : MonoBehaviour //Collision effects refers to status effects, such as disabling the player
     {
-        _collisionController = this.GetComponent<MultiplayerCollisionController>();
-    }
+        private MultiplayerCollisionController _collisionController; //The collision controller that handles all collisions (Another component on this object)
 
-    public void DisableEnemy()
-    {
-        if (_collisionController.CollisionObj != null)
+        private void Awake()
         {
-            _collisionController.CollisionObj.ActivateAbility("DisablePlayer");
+            _collisionController = this.GetComponent<MultiplayerCollisionController>();
+        }
+
+        public void DisableEnemy() //Called by Animation Event
+        {
+            if (_collisionController.CollisionPlayer != null) //Get the player that the projectile collided with and disable them
+            {
+                _collisionController.CollisionPlayer.ActivateNetworkFunction("DisablePlayer"); //Disables the selected player on all clients
+            }
         }
     }
 }
+

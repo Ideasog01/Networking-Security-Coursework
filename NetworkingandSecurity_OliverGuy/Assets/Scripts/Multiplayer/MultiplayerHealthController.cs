@@ -2,113 +2,133 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.UI;
+using Multiplayer;
 
-public class MultiplayerHealthController : MonoBehaviour, IPunObservable
+namespace Multiplayer
 {
-    [Header("Statistics")]
-
-    [SerializeField] private int maxHealth;
-    [SerializeField] private bool isEnemy;
-    [SerializeField] private Slider healthSlider;
-
-    private int _currentHealth;
-
-    private bool _isInvulnerable;
-
-    private PhotonView _photonView;
-    private Animator _characterAnimator;
-
-    public bool IsInvulnerable
+    public class MultiplayerHealthController : MonoBehaviour, IPunObservable
     {
-        get { return _isInvulnerable; }
-        set { _isInvulnerable = value; }
-    }
+        [Header("Statistics")]
 
-    public int MaxHealth
-    {
-        get { return maxHealth; }
-    }
+        [SerializeField] private int maxHealth;
+        [SerializeField] private Slider healthSlider; //This slider will be displayed on the heads-up-display or in-world canvas based on whether the health controller belongs to the local player.
 
-    public int CurrentHealth
-    {
-        get { return _currentHealth; }
-    }
+        private int _currentHealth;
 
-    private void Start()
-    {
-        _photonView = this.GetComponent<PhotonView>();
-        _characterAnimator = this.transform.GetChild(0).GetComponent<Animator>();
+        private bool _isInvulnerable;
 
-        if (_photonView.IsMine)
+        private PhotonView _photonView;
+        private Animator _characterAnimator;
+
+        #region Properties
+
+        public bool IsInvulnerable
         {
-            healthSlider = MultiplayerGameManager.PlayerHealthSlider; //Assign to HUD Slider
+            get { return _isInvulnerable; }
+            set { _isInvulnerable = value; }
         }
 
-        _currentHealth = maxHealth;
-        healthSlider.maxValue = maxHealth;
-        healthSlider.value = _currentHealth;
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.IsWriting)
+        public int MaxHealth
         {
-            stream.SendNext(_currentHealth);
+            get { return maxHealth; }
         }
-        else if(stream.IsReading)
+
+        public int CurrentHealth
         {
-            _currentHealth = (int)stream.ReceiveNext();
+            get { return _currentHealth; }
+        }
+
+        #endregion
+
+        private void Start()
+        {
+            //Assign components
+            _photonView = this.GetComponent<PhotonView>();
+            _characterAnimator = this.transform.GetChild(0).GetComponent<Animator>();
+
+            if (_photonView.IsMine)
+            {
+                healthSlider = MultiplayerGameManager.MultiplayerPlayerDisplay.HealthSlider; //Assign to HUD Slider
+            }
+            else
+            {
+                healthSlider = this.transform.GetChild(3).GetChild(0).GetComponent<Slider>(); //Assign to in-world canvas slider under this object
+            }
+
+            _currentHealth = maxHealth;
+            healthSlider.maxValue = maxHealth;
             healthSlider.value = _currentHealth;
         }
-    }
 
-    public void TakeDamage(MultiplayerCollisionController collision)
-    {
-        if(!_isInvulnerable && _currentHealth > 0)
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) //Update the health of this player to be the same on all clients.
         {
-            _currentHealth -= collision.CollisionDamage;
-
-            Debug.Log("Entity took damage: " + collision.Owner.NickName + "\nHealth: " + _currentHealth.ToString());
-
-            if(_photonView.IsMine)
+            if (stream.IsWriting)
             {
+                stream.SendNext(_currentHealth);
+            }
+            else if (stream.IsReading)
+            {
+                _currentHealth = (int)stream.ReceiveNext();
                 healthSlider.value = _currentHealth;
             }
+        }
 
-            if (_currentHealth <= 0)
+        #region Apply Health
+
+        public void TakeDamage(MultiplayerCollisionController collision)
+        {
+            if (!_isInvulnerable && _currentHealth > 0)
             {
-                if(_photonView.IsMine)
+                _currentHealth -= collision.CollisionDamage;
+
+                Debug.Log("Entity took damage: " + collision.Owner.NickName + "\nHealth: " + _currentHealth.ToString());
+
+                if (_photonView.IsMine) //Only need to update the health display on the local client
                 {
-                    collision.Owner.AddScore(1);
+                    healthSlider.value = _currentHealth;
                 }
-                
-                ControllerDeath(collision);
+
+                if (_currentHealth <= 0) //When the health reaches zero, the player dies, score is updated for attacker and respawn system is initiated for the local player that was eliminated.
+                {
+                    if (_photonView.IsMine)
+                    {
+                        collision.Owner.AddScore(1);
+                    }
+
+                    ControllerDeath(collision);
+                }
             }
         }
-    }
 
-    public void Heal(int amount)
-    {
-        _currentHealth += amount;
-
-        if(_currentHealth > maxHealth)
+        public void Heal(int amount)
         {
+            _currentHealth += amount;
+
+            if (_currentHealth > maxHealth) //The health should not be able to be larger than the maximum health
+            {
+                _currentHealth = maxHealth;
+            }
+        }
+
+        #endregion
+
+        #region Player Death & Respawn
+
+        public void ControllerDeath(MultiplayerCollisionController collision)
+        {
+            if (_photonView.IsMine)
+            {
+                _characterAnimator.SetBool("isDead", true); //Plays death animation
+                MultiplayerGameManager.MultiplayerRespawnManager.PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject); //Initiates the respawn display for the local player
+            }
+        }
+
+        public void ResetPlayer() //When it is time to respawn the player, set character animator state to default and reset health.
+        {
+            _characterAnimator.SetBool("isDead", false);
             _currentHealth = maxHealth;
         }
-    }
 
-    public void ControllerDeath(MultiplayerCollisionController collision)
-    {
-        if (_photonView.IsMine)
-        {
-            _characterAnimator.SetBool("isDead", true);
-            FindFirstObjectByType<MultiplayerGameManager>().PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject);
-        }
-    }
-
-    public void ResetPlayer()
-    {
-        _characterAnimator.SetBool("isDead", false);
-        _currentHealth = maxHealth;
+        #endregion
     }
 }

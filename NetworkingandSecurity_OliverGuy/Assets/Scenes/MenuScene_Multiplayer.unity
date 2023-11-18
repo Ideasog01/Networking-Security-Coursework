@@ -16185,8 +16185,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8709913206394019830}
-        m_TargetAssemblyTypeName: MultiplayerLobby, Assembly-CSharp
-        m_MethodName: CreateARoom
+        m_TargetAssemblyTypeName: Multiplayer.MultiplayerLobby, Assembly-CSharp
+        m_MethodName: CreateRoomClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20022,7 +20022,6 @@ MonoBehaviour:
   playerNameInput: {fileID: 486326032}
   listRoomPanelContent: {fileID: 6812360275617290736}
   insideRoomPlayerList: {fileID: 1797324127}
-  playerName: 
   invalidRoomNamePrompt: {fileID: 136354022}
   roomNameText: {fileID: 782475130}
   startGameButton: {fileID: 1958258714}

@@ -3919,7 +3919,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -11511,7 +11511,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -12012,7 +12012,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -12777,7 +12777,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -14579,8 +14579,10 @@ GameObject:
   - component: {fileID: 1732441159}
   - component: {fileID: 1732441160}
   - component: {fileID: 1732441161}
-  - component: {fileID: 1732441162}
   - component: {fileID: 1732441163}
+  - component: {fileID: 1732441164}
+  - component: {fileID: 1732441165}
+  - component: {fileID: 1732441162}
   m_Layer: 0
   m_Name: MultiplayerGameManager
   m_TagString: Untagged
@@ -14615,42 +14617,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bacb10d610f1c4aa5d75840c80785b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxScore: 1
+  maxScore: 2
   matchTimeInSeconds: 30
   victoryCanvas: {fileID: 1663918155}
   defeatCanvas: {fileID: 1866625090}
   drawCanvas: {fileID: 1089662561}
   playerWonText: {fileID: 1386850090}
-  objectiveText: {fileID: 1024502728}
-  healthSlider: {fileID: 822303082}
-  abilitySliderArray:
-  - {fileID: 721565542}
-  - {fileID: 1547872508}
-  - {fileID: 2053681213}
-  - {fileID: 1376108457}
-  abilityTextArray:
-  - {fileID: 1374697507}
-  - {fileID: 442053218}
-  - {fileID: 1461461093}
-  - {fileID: 1401799463}
-  playerCanvas: {fileID: 1220924106}
   restartGameButtons:
   - {fileID: 41439644}
   - {fileID: 1624664399}
   - {fileID: 655114813}
-  timerText: {fileID: 840358900}
-  spawnPositionArray:
-  - {fileID: 239700526}
-  - {fileID: 854871518}
-  - {fileID: 220010124}
-  - {fileID: 5485360}
-  cameraTracking: {fileID: 963194229}
-  respawnAnimator: {fileID: 904534588}
-  respawnText: {fileID: 602532050}
-  respawnSlider: {fileID: 1415246328}
-  respawnTime: 5
-  eliminationText: {fileID: 1727572980}
-  respawnCanvas: {fileID: 904534586}
   pauseCanvas: {fileID: 1059210964}
 --- !u!114 &1732441161
 MonoBehaviour:
@@ -14703,6 +14679,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chatLogTextPrefab: {fileID: 8240562195363656896, guid: 77d8487c016063041829eb2c8bb91026, type: 3}
   chatLogParent: {fileID: 396404506}
+--- !u!114 &1732441164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732441158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdc1ebf098fdfb94ba65153d6cd412aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnTimerText: {fileID: 602532050}
+  respawnSlider: {fileID: 1415246328}
+  eliminationText: {fileID: 1727572980}
+  respawnCanvas: {fileID: 904534586}
+  spawnPositionArray:
+  - {fileID: 239700526}
+  - {fileID: 854871518}
+  - {fileID: 220010124}
+  - {fileID: 5485360}
+  respawnTime: 5
+  respawnAnimator: {fileID: 904534588}
+--- !u!114 &1732441165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732441158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0f96138b8190674a85847c53b1fde6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSlider: {fileID: 822303082}
+  playerCanvas: {fileID: 1220924106}
+  objectiveText: {fileID: 1024502728}
+  timerText: {fileID: 840358900}
+  abilitySliderArray:
+  - {fileID: 721565542}
+  - {fileID: 1547872508}
+  - {fileID: 2053681213}
+  - {fileID: 1376108457}
+  abilityCooldownTextArray:
+  - {fileID: 1374697507}
+  - {fileID: 442053218}
+  - {fileID: 1461461093}
+  - {fileID: 1401799463}
 --- !u!1 &1755176070
 GameObject:
   m_ObjectHideFlags: 0
