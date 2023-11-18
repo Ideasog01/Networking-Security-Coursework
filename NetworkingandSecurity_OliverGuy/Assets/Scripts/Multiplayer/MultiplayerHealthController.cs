@@ -24,6 +24,11 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         set { _isInvulnerable = value; }
     }
 
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+    }
+
     public int CurrentHealth
     {
         get { return _currentHealth; }
@@ -36,7 +41,7 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
 
         if (_photonView.IsMine)
         {
-            healthSlider = MultiplayerLevelManager.PlayerHealthSlider; //Assign to HUD Slider
+            healthSlider = MultiplayerGameManager.PlayerHealthSlider; //Assign to HUD Slider
         }
 
         _currentHealth = maxHealth;
@@ -72,7 +77,7 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
 
             if (_currentHealth <= 0)
             {
-                if(!_photonView.IsMine)
+                if(_photonView.IsMine)
                 {
                     collision.Owner.AddScore(1);
                 }
@@ -82,12 +87,22 @@ public class MultiplayerHealthController : MonoBehaviour, IPunObservable
         }
     }
 
+    public void Heal(int amount)
+    {
+        _currentHealth += amount;
+
+        if(_currentHealth > maxHealth)
+        {
+            _currentHealth = maxHealth;
+        }
+    }
+
     public void ControllerDeath(MultiplayerCollisionController collision)
     {
         if (_photonView.IsMine)
         {
             _characterAnimator.SetBool("isDead", true);
-            FindFirstObjectByType<MultiplayerLevelManager>().PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject);
+            FindFirstObjectByType<MultiplayerGameManager>().PlayerDeath(PhotonNetwork.LocalPlayer, collision.Owner, collision.OwnerCollider.gameObject);
         }
     }
 

@@ -12,7 +12,7 @@ public class MultiplayerCollisionController : MonoBehaviour
     private Photon.Realtime.Player _owner;
     private Collider _ownerCollider;
 
-    private Multiplayer _collisionObj;
+    private MultiplayerPlayerController _collisionObj;
 
     public Collider OwnerCollider
     {
@@ -31,7 +31,7 @@ public class MultiplayerCollisionController : MonoBehaviour
         set { _owner = value; }
     }
 
-    public Multiplayer CollisionObj
+    public MultiplayerPlayerController CollisionObj
     {
         get { return _collisionObj; }
     }
@@ -52,7 +52,7 @@ public class MultiplayerCollisionController : MonoBehaviour
         {
             if (collision.collider.CompareTag("Player"))
             {
-                _collisionObj = collision.collider.GetComponent<Multiplayer>();
+                _collisionObj = collision.collider.GetComponent<MultiplayerPlayerController>();
                 collisionEvent.Invoke();
                 collision.collider.GetComponent<MultiplayerHealthController>().TakeDamage(this);
             }

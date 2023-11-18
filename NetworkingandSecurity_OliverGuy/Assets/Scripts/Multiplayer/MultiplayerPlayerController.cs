@@ -2,11 +2,10 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Multiplayer : MonoBehaviour
+public class MultiplayerPlayerController : MonoBehaviour
 {
     public bool pauseMenuActive;
 
@@ -52,6 +51,16 @@ public class Multiplayer : MonoBehaviour
 
     private float _disableTimer;
 
+    public PlayerMovement PlayerMovement
+    {
+        get { return _playerMovement; }
+    }
+
+    public MultiplayerHealthController HealthController
+    {
+        get { return _playerHealthController; }
+    }
+
     private void Awake()
     {
         _photonView = this.GetComponent<PhotonView>();
@@ -59,8 +68,8 @@ public class Multiplayer : MonoBehaviour
         _playerAnimator = this.transform.GetChild(0).GetComponent<Animator>();
         _playerHealthController = this.GetComponent<MultiplayerHealthController>();
 
-        abilitySliderArray = MultiplayerLevelManager.AbilitySliderArray;
-        abilityTextArray = MultiplayerLevelManager.AbilityTextArray;
+        abilitySliderArray = MultiplayerGameManager.AbilitySliderArray;
+        abilityTextArray = MultiplayerGameManager.AbilityTextArray;
 
         if(!_photonView.IsMine)
         {
@@ -79,7 +88,7 @@ public class Multiplayer : MonoBehaviour
             return;
         }
 
-        if (!MultiplayerLevelManager.GameInProgress)
+        if (!MultiplayerGameManager.GameInProgress)
         {
             _playerMovement.StopMovement = true;
             return;
@@ -87,7 +96,7 @@ public class Multiplayer : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            FindFirstObjectByType<MultiplayerLevelManager>().DisplayPauseMenu(true);
+            FindFirstObjectByType<MultiplayerGameManager>().DisplayPauseMenu(true);
         }
 
         if (_isPlayerDisabled)
@@ -144,15 +153,30 @@ public class Multiplayer : MonoBehaviour
         _playerMovement.UpdateMovement();
     }
 
+    public void ActivateAbility(string functionName)
+    {
+        _photonView.RPC(functionName, RpcTarget.AllViaServer);
+    }
+
+    public void DisablePlayer(bool disable)
+    {
+        _playerMovement.StopMovement = disable;
+        _isPlayerDisabled = disable;
+    }
+
+    public void ResetPlayer(Vector3 position)
+    {
+        _playerHealthController.Heal(_playerHealthController.MaxHealth);
+        _playerMovement.StopMovement = false;
+        DisablePlayer(false);
+        _playerAnimator.SetBool("isDead", false);
+        this.transform.position = position;
+    }
+
     private void PlayAnimation(string trigger)
     {
         _playerAnimator.SetTrigger(trigger);
         _playerMovement.StopMovement = true;
-    }
-
-    public void ActivateAbility(string functionName)
-    {
-        _photonView.RPC(functionName, RpcTarget.AllViaServer);
     }
 
     [PunRPC]
@@ -269,11 +293,5 @@ public class Multiplayer : MonoBehaviour
         {
             abilityTextArray[abilityIndex].text = "";
         }
-    }
-
-    public void DisablePlayer(bool disable)
-    {
-        _playerMovement.StopMovement = disable;
-        _isPlayerDisabled = disable;
     }
 }
