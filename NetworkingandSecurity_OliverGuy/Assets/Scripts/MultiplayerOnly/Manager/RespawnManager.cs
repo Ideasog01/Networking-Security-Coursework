@@ -24,6 +24,7 @@ namespace Multiplayer
         [SerializeField] private Transform[] spawnPositionArray;
 
         private int _respawnTimer;
+        private float _timeElapsed; //The total time that the respawn timer has been running
 
         private List<int> _closedSpawnPositionsList = new List<int>(); //The spawn positions that are no longer available for a short time. (Avoids players respawning close to one another, making it difficult to react).
 
@@ -52,11 +53,15 @@ namespace Multiplayer
         {
             if (_respawnTimer > 0) //If respawning is currently active, update the slider display.
             {
-                respawnSlider.maxValue = respawnTime;
-
-                if (respawnSlider.value > _respawnTimer) //Display only. Smoothly decreases the respawn slider to match with the current time remaining.
+                if (_timeElapsed < respawnTime) //Smoothly decreases the respawn slider to match with the current time remaining.
                 {
-                    respawnSlider.value -= Time.deltaTime * 1;
+                    float previousValue = respawnSlider.value;
+                    respawnSlider.value = Mathf.Lerp(respawnTime, 0, _timeElapsed / respawnTime);
+                    _timeElapsed += Time.deltaTime;
+                }
+                else
+                {
+                    respawnSlider.value = 0;
                 }
             }
         }
@@ -75,6 +80,12 @@ namespace Multiplayer
 
                 GameManager.PlayerController.PlayerMovement.StopMovement = true;
                 GameManager.PlayerDisplay.PlayerCanvas.enabled = false;
+
+                _timeElapsed = 0;
+
+                respawnSlider.maxValue = respawnTime;
+                respawnSlider.value = _respawnTimer;
+                respawnTimerText.text = respawnTime.ToString();
 
                 StartCoroutine(RespawnTimer());
             }

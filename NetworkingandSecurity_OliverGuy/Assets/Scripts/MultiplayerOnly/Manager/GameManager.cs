@@ -51,7 +51,7 @@ namespace Multiplayer
             _matchTimer = 0;
 
             //Instantiate the player and assign all neccessary values
-            GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", RespawnManager.SpawnPositionArray[PhotonNetwork.LocalPlayer.ActorNumber].position, Quaternion.identity);
+            GameObject obj = PhotonNetwork.Instantiate("Player_Multiplayer", RespawnManager.SpawnPositionArray[PhotonNetwork.LocalPlayer.ActorNumber - 1].position, Quaternion.identity);
             PlayerController = obj.transform.GetChild(0).GetComponent<PlayerController>();
             CameraTracking.TargetTransform = PlayerController.transform;
             _photonView = this.GetComponent<PhotonView>();
@@ -179,22 +179,22 @@ namespace Multiplayer
         {
             //Note that only the master client (leader/creator of the room) can restart the match
 
-            if (winner == PhotonNetwork.LocalPlayer) //If the local player is the winner
+            if(winner == null) //If there is no winner, and the result of the match is a draw
+            {
+                drawCanvas.SetActive(true);
+                restartGameButtons[2].SetActive(PhotonNetwork.IsMasterClient);
+            }
+            else if (winner == PhotonNetwork.LocalPlayer) //If the local player is the winner
             {
                 victoryCanvas.SetActive(true);
                 restartGameButtons[0].SetActive(PhotonNetwork.IsMasterClient);
                 GameInProgress = false;
             }
-            else if (winner != PhotonNetwork.LocalPlayer) //If the local player is NOT the winner
+            else //If the local player is NOT the winner
             {
                 defeatCanvas.SetActive(true);
                 playerWonText.text = winner.NickName + " is Victorious!";
                 restartGameButtons[1].SetActive(PhotonNetwork.IsMasterClient);
-            }
-            else //If there is no winner, and the result of the match is a draw
-            {
-                drawCanvas.SetActive(true);
-                restartGameButtons[2].SetActive(PhotonNetwork.IsMasterClient);
             }
 
             PlayerDisplay.PlayerCanvas.enabled = false; //Display the heads-up-display

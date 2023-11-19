@@ -168,7 +168,7 @@ namespace Multiplayer
             foreach (var room in _cachedRoomList)
             {
                 var newRoomEntry = Instantiate(roomEntryPrefab, listRoomPanelContent);
-                var newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
+                RoomEntry newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
                 newRoomEntryScript.RoomName = room.Key;
                 newRoomEntryScript.RoomNameText.text = string.Format("[{0} - ({1}/{2})]", room.Key, room.Value.PlayerCount, room.Value.MaxPlayers); //Display the room name and player count on each button.
             }

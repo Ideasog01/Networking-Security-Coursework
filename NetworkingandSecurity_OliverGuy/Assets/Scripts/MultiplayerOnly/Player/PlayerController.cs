@@ -83,7 +83,11 @@ namespace Multiplayer
                 if(!_isPlayerDisabled)
                 {
                     PlayerGameplayInput(); //As long as the player is enabled, they can perform abilities (if not on cooldown).
-                    _playerMovement.UpdateRotation(); //Updates the rotation to follow the mouse cursor.
+
+                    if(_disableTimer <= 0)
+                    {
+                        _playerMovement.UpdateRotation(); //Updates the rotation to follow the mouse cursor.
+                    }
                 }
 
                 if (!GameManager.GameInProgress)

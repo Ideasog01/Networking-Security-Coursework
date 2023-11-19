@@ -9388,8 +9388,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8709913206394019830}
-        m_TargetAssemblyTypeName: MultiplayerLobby, Assembly-CSharp
-        m_MethodName: LeaveRoom
+        m_TargetAssemblyTypeName: Multiplayer.MultiplayerLobby, Assembly-CSharp
+        m_MethodName: LeaveRoomClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -58,6 +58,8 @@ namespace Multiplayer
             {
                 if (collision.collider.CompareTag("Player"))
                 {
+                    _collisionPlayer = collision.gameObject.GetComponent<PlayerController>();
+
                     collisionEvent.Invoke(); //Potential collision events could include applying disabling effects, or enabling visual effects
                     collision.collider.GetComponent<HealthController>().TakeDamage(this);
                 }
