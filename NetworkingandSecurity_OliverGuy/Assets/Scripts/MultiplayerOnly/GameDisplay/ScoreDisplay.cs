@@ -12,7 +12,7 @@ namespace Multiplayer
         [SerializeField] private GameObject playerScorePrefab; //Includes a background and text for displaying score on heads-up-display
         [SerializeField] private Transform panel; //The parent for all score display objects
 
-        private Dictionary<int, GameObject> playerScore = new Dictionary<int, GameObject>();
+        private Dictionary<int, GameObject> _playerScore = new Dictionary<int, GameObject>();
 
         private void Start()
         {
@@ -24,13 +24,13 @@ namespace Multiplayer
                 var playerScoreObjectText = playerScoreObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
                 playerScoreObjectText.text = player.NickName + ": " + player.GetScore().ToString();
 
-                playerScore.Add(player.ActorNumber, playerScoreObject); //For access later
+                _playerScore.Add(player.ActorNumber, playerScoreObject); //For access later
             }
         }
 
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps) //Updates each score value across all clients whenever one is updated
         {
-            var playerScoreObject = playerScore[targetPlayer.ActorNumber];
+            var playerScoreObject = _playerScore[targetPlayer.ActorNumber];
             var playerScoreObjectText = playerScoreObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             playerScoreObjectText.text = targetPlayer.NickName + ": " + targetPlayer.GetScore().ToString();
         }

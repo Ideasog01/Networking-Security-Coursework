@@ -19,7 +19,7 @@ namespace Multiplayer
             set { roomName = value; }
         }
 
-        public void JoinRoom()
+        public void JoinRoom() //Via Inspector (Button)
         {
             PhotonNetwork.LeaveLobby();
             PhotonNetwork.JoinRoom(roomName); //Joins the room the player clicked on from the room list display
