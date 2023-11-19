@@ -60,7 +60,7 @@ namespace Multiplayer
             Debug.Log("Player Count: " + PhotonNetwork.LocalPlayer.ActorNumber);
             MultiplayerChatDisplay.CallNewMessage(PhotonNetwork.LocalPlayer.NickName + " joined the game.", false);
 
-            if (PhotonNetwork.IsMasterClient)
+            if(PhotonNetwork.IsMasterClient)
             {
                 InitialiseTimer(); //The game timer that will decrease every second
             }
@@ -114,10 +114,12 @@ namespace Multiplayer
             if (stream.IsWriting)
             {
                 stream.SendNext(GameInProgress);
+                stream.SendNext(_matchTimer);
             }
             else if (stream.IsReading)
             {
                 GameInProgress = (bool)stream.ReceiveNext();
+                _matchTimer = (float)stream.ReceiveNext();
             }
         }
 
@@ -137,7 +139,7 @@ namespace Multiplayer
             {
                 if (GameInProgress) //In the case that the game has already finished
                 {
-                    DisplayEndScreen(otherPlayer);
+                    DisplayEndScreen(PhotonNetwork.LocalPlayer);
                 }
 
                 //We do not want to give the ability to restart the game, as there are no players left!
@@ -161,6 +163,10 @@ namespace Multiplayer
                     restartGameButtons[1].SetActive(true);
                     restartGameButtons[2].SetActive(true);
                 }
+            }
+            else if(PhotonNetwork.LocalPlayer == newMasterClient)
+            {
+                StartCoroutine(TimerDelay()); //Ensures the timer continues if the game is still in progress. (Match timer is synced across all clients).
             }
         }
 
@@ -206,12 +212,6 @@ namespace Multiplayer
 
         private void InitialiseTimer()
         {
-            _photonView.RPC("UpdateGameTimerDisplay", RpcTarget.AllViaServer); //Update the game timer on all clients
-        }
-
-        [PunRPC]
-        private void UpdateGameTimerDisplay()
-        {
             _matchTimer = matchTimeInSeconds;
             StartCoroutine(TimerDelay());
         }
@@ -221,12 +221,12 @@ namespace Multiplayer
             yield return new WaitForSeconds(1);
             _matchTimer--;
 
-            PlayerDisplay.UpdateTimerDisplay(_matchTimer);
+            _photonView.RPC("UpdateTimerDisplay", RpcTarget.AllViaServer, _matchTimer); //Called on all clients from the 'PlayerDisplay' component on this object
 
             //Repeat the process of decreasing the timer and displaying the remaining time until the timer runs out.
             if (_matchTimer <= 0)
             {
-                FindWinner();
+                _photonView.RPC("FindWinner", RpcTarget.AllViaServer); //Called on all clients
             }
             else
             {

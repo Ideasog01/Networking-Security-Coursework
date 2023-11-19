@@ -1,10 +1,11 @@
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Multiplayer
 {
-    public class PlayerDisplay : MonoBehaviour
+    public class PlayerDisplay : MonoBehaviourPunCallbacks
     {
         [Header("HUD")]
 
@@ -40,6 +41,7 @@ namespace Multiplayer
             objectiveText.text = "Eliminations Remaining: " + (maxEliminations - eliminations).ToString(); //Display the number of eliminations left until victory
         }
 
+        [PunRPC]
         public void UpdateTimerDisplay(float timer) //Updates the timer in the format of MINUTES:SECONDS
         {
             string minutes = (Mathf.FloorToInt(timer / 60)).ToString("00");

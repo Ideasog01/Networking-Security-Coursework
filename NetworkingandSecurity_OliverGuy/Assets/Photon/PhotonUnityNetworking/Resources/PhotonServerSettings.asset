@@ -50,6 +50,7 @@ MonoBehaviour:
   - FindWinner
   - ResetGame
   - DisplayNewMessage
+  - UpdateTimerDisplay
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

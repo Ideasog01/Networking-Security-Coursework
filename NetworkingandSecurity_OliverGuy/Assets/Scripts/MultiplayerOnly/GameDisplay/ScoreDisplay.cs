@@ -34,5 +34,13 @@ namespace Multiplayer
             var playerScoreObjectText = playerScoreObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             playerScoreObjectText.text = targetPlayer.NickName + ": " + targetPlayer.GetScore().ToString();
         }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer) //Remove and destroy the corresponding score display when a remote player leaves.
+        {
+            GameObject obj = _playerScore[otherPlayer.ActorNumber];
+            Destroy(obj);
+
+            _playerScore.Remove(otherPlayer.ActorNumber);
+        }
     }
 }

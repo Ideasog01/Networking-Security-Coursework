@@ -170,9 +170,11 @@ namespace Multiplayer
             collisionController.Owner = _photonView.Owner;
             collisionController.OwnerCollider = this.GetComponent<Collider>();
 
-            //Apply ability cooldown based on assigned duration
-            _abilityCooldowns[0] = abilityCooldownDurations[0];
-            StartCoroutine(AbilityCooldown(0));
+            if(_photonView.IsMine)
+            {
+                //Apply ability cooldown based on assigned duration
+                StartCoroutine(AbilityCooldown(0));
+            }
         }
 
         [PunRPC]
@@ -188,9 +190,11 @@ namespace Multiplayer
             collisionController.Owner = _photonView.Owner;
             collisionController.OwnerCollider = this.GetComponent<Collider>();
 
-            //Apply ability cooldown based on assigned duration
-            _abilityCooldowns[1] = abilityCooldownDurations[1];
-            StartCoroutine(AbilityCooldown(1));
+            if (_photonView.IsMine)
+            {
+                //Apply ability cooldown based on assigned duration
+                StartCoroutine(AbilityCooldown(1));
+            }
         }
 
         [PunRPC]
@@ -204,8 +208,12 @@ namespace Multiplayer
         private IEnumerator CancelShield() //Cancel the player's immunity to damage after a duration. Note that the visual effect duration is assigned inside the inspector on the corresponding particle system component.
         {
             yield return new WaitForSeconds(shieldDuration);
-            _abilityCooldowns[1] = abilityCooldownDurations[2];
-            StartCoroutine(AbilityCooldown(2)); //Now start the shield ability cooldown.
+
+            if(_photonView.IsMine)
+            {
+                StartCoroutine(AbilityCooldown(2)); //Now start the shield ability cooldown.
+            }
+
             _playerHealthController.IsInvulnerable = false;
         }
 
@@ -239,9 +247,12 @@ namespace Multiplayer
 
             VisualEffectManager.SpawnVisualEffect(primaryVisualEffectPrefab, projectileSpawn.position, this.transform.rotation, 5);
 
-            //Apply ability cooldown based on assigned duration
-            _abilityCooldowns[3] = abilityCooldownDurations[3];
-            StartCoroutine(AbilityCooldown(3));
+            if(_photonView.IsMine)
+            {
+                //Apply ability cooldown based on assigned duration
+                _abilityCooldowns[3] = abilityCooldownDurations[3];
+                StartCoroutine(AbilityCooldown(3));
+            }
         }
 
         #endregion
