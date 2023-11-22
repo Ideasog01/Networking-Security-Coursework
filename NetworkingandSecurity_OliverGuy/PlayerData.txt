@@ -1,0 +1,1 @@
+{"username":null,"bestScore":0,"bestScoreDate":null,"totalPlayersInGame":0,"roomName":null}

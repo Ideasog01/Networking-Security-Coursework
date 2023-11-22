@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Multiplayer
         public static PlayerDisplay PlayerDisplay;
         public static PlayerController PlayerController;
         public static CameraTracking CameraTracking;
+        public static SaveManager SaveManager;
 
         public static bool GameInProgress;
 
@@ -46,6 +48,7 @@ namespace Multiplayer
             RespawnManager = this.GetComponent<RespawnManager>();
             PlayerDisplay = this.GetComponent<PlayerDisplay>();
             CameraTracking = Camera.main.GetComponent<CameraTracking>();
+            SaveManager = this.GetComponent<SaveManager>();
 
             GameInProgress = true;
             _matchTimer = 0;
@@ -105,6 +108,7 @@ namespace Multiplayer
                 if (targetPlayer.GetScore() == maxScore) //If the score reached maximum, declare the winner on all clients
                 {
                     _photonView.RPC("FindWinner", RpcTarget.AllViaServer);
+                    StorePersonalBest();
                 }
             }
         }
@@ -279,5 +283,26 @@ namespace Multiplayer
                 }
             }
         }
+
+        private void StorePersonalBest()
+        {
+            Player localPlayer = PhotonNetwork.LocalPlayer;
+
+            int currentScore = localPlayer.GetScore();
+            PlayerData playerData = SaveManager.PlayerData;
+
+            if(currentScore > playerData.bestScore)
+            {
+                Debug.Log("Personal best stored!");
+
+                playerData.username = localPlayer.NickName;
+                playerData.bestScore = currentScore;
+                playerData.bestScoreDate = DateTime.UtcNow.ToString();
+                playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
+                playerData.roomName = PhotonNetwork.CurrentRoom.Name;
+
+                SaveManager.SavePlayerData();
+            }
+        }    
     }
 }
