@@ -1,36 +1,28 @@
 using Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PersonalBestPopup : MonoBehaviour
 {
     [SerializeField] private SaveManager saveManager;
-
-    [SerializeField] private GameObject scoreHolder;
     [SerializeField] private GameObject noScoreMessage;
-
-    [Header("Text")]
-
-    [SerializeField] private Text usernameText;
-    [SerializeField] private Text bestScoreText;
-    [SerializeField] private Text dateText;
-    [SerializeField] private Text totalPlayersText;
-    [SerializeField] private Text roomNameText;
+    [SerializeField] private TextMeshProUGUI statisticsText;
 
     public void UpdatePersonalBestUI()
     {
         PlayerData playerData = saveManager.PlayerData;
 
-        scoreHolder.SetActive(playerData.username != null);
+        statisticsText.gameObject.SetActive(playerData.username != null);
         noScoreMessage.SetActive(playerData.username == null);
 
         if(playerData.username != null)
         {
-            usernameText.text = playerData.username;
-            bestScoreText.text = playerData.bestScore.ToString();
-            dateText.text = playerData.bestScoreDate;
-            totalPlayersText.text = playerData.totalPlayersInGame.ToString();
-            roomNameText.text = playerData.roomName;
+            statisticsText.text = "Username: " + playerData.username;
+            statisticsText.text += "\nBest : " + playerData.bestScore.ToString();
+            statisticsText.text += "\nDate: " + playerData.bestScoreDate;
+            statisticsText.text += "\nTotal Players: " + playerData.totalPlayersInGame.ToString();
+            statisticsText.text += "\nRoom Name: " + playerData.roomName;
         }
     }
 

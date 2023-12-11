@@ -2,13 +2,17 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Chat;
 
 namespace Multiplayer
 {
-    public class MultiplayerChatDisplay : MonoBehaviourPunCallbacks
+    public class MultiplayerChatDisplay : MonoBehaviourPunCallbacks, IChatClientListener
     {
         [SerializeField] private TextMeshProUGUI chatLogTextPrefab;
         [SerializeField] private Transform chatLogParent; //The parent used for the chat log text objects
+        [SerializeField] private TMP_InputField messageInputField;
+
+        private ChatClient _chatClient;
 
         private List<TextMeshProUGUI> _chatLogList = new List<TextMeshProUGUI>(); //The list of messages
 
@@ -17,6 +21,34 @@ namespace Multiplayer
         private void Awake()
         {
             _photonView = this.GetComponent<PhotonView>();
+        }
+
+        private void Start()
+        {
+            InitialiseChat();
+        }
+
+        private void Update()
+        {
+            _chatClient.Service();
+        }
+
+        private void InitialiseChat()
+        {
+            _chatClient = new ChatClient(this);
+
+            _chatClient.SetOnlineStatus(ChatUserStatus.Online);
+            _chatClient.ChatRegion = "EU";
+            _chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(PhotonNetwork.LocalPlayer.NickName));
+            
+            _chatClient.Subscribe(PhotonNetwork.CurrentRoom.Name);
+        }
+
+        public void SendMessage() //Via Inspector (Button)
+        {
+            bool result = _chatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, messageInputField.text);
+            messageInputField.text = "";
+            Debug.Log("Message sent in chat! Result: " + result);
         }
 
         public void CallNewMessage(string message, bool isLocal)
@@ -61,5 +93,68 @@ namespace Multiplayer
                 _chatLogList.Add(newText);
             }
         }
+
+        #region IChatClientListener Implementation
+
+        public void DebugReturn(ExitGames.Client.Photon.DebugLevel level, string message)
+        {
+            
+        }
+
+        public void OnDisconnected()
+        {
+            
+        }
+
+        public override void OnConnected()
+        {
+           
+        }
+
+        public void OnChatStateChange(ChatState state)
+        {
+            
+        }
+
+        public void OnGetMessages(string channelName, string[] senders, object[] messages)
+        {
+            for(int i = 0; i < senders.Length; i++)
+            {
+                DisplayNewMessage(senders[i] + ": " + messages[i]);
+                Debug.Log("New messages recieved!");
+            }
+        }
+
+        public void OnPrivateMessage(string sender, object message, string channelName)
+        {
+            
+        }
+
+        public void OnSubscribed(string[] channels, bool[] results)
+        {
+            Debug.Log("Client subscribed to channels!");
+        }
+
+        public void OnUnsubscribed(string[] channels)
+        {
+            
+        }
+
+        public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
+        {
+            
+        }
+
+        public void OnUserSubscribed(string channel, string user)
+        {
+           
+        }
+
+        public void OnUserUnsubscribed(string channel, string user)
+        {
+            
+        }
+
+        #endregion
     }
 }
