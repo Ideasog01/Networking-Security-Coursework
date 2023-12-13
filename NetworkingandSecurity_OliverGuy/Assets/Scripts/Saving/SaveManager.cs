@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.IO;
 using Leguar.TotalJSON;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class SaveManager : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class SaveManager : MonoBehaviour
     private void Start()
     {
         LoadPlayerData();
+        LoginToPlayFab();
     }
 
     public void SavePlayerData()
@@ -26,7 +29,7 @@ public class SaveManager : MonoBehaviour
 
     public void LoadPlayerData()
     {
-        if(File.Exists(filePath))
+        if(!File.Exists(filePath))
         {
             _playerData = new PlayerData();
             SavePlayerData();
@@ -34,5 +37,27 @@ public class SaveManager : MonoBehaviour
 
         string fileContents = File.ReadAllText(filePath);
         _playerData = JSON.ParseString(fileContents).Deserialize<PlayerData>();
+    }
+
+    private void LoginToPlayFab()
+    {
+        LoginWithCustomIDRequest request = new LoginWithCustomIDRequest()
+        {
+            CreateAccount = true,
+            CustomId = PlayerData.uid,
+        };
+
+        PlayFabClientAPI.LoginWithCustomID(request, PlayFabLoginResult, PlayFabLoginError);
+    }
+
+    private void PlayFabLoginResult(LoginResult loginResult)
+    {
+        Debug.Log("PlayFab - Login Succeeded: " + loginResult.ToString());
+    }
+
+    private void PlayFabLoginError(PlayFabError loginError)
+    {
+        Debug.Log("PlayFab - Login Failed: " + loginError.ToString());
+
     }
 }

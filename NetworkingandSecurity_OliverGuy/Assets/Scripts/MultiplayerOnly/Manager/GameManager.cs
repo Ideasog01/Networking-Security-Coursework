@@ -12,12 +12,13 @@ namespace Multiplayer
     public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         //Allows for global access across multiple scripts
-        public static MultiplayerChatDisplay MultiplayerChatDisplay;
+        public static MultiplayerChat MultiplayerChatDisplay;
         public static RespawnManager RespawnManager;
         public static PlayerDisplay PlayerDisplay;
         public static PlayerController PlayerController;
         public static CameraTracking CameraTracking;
         public static SaveManager SaveManager;
+        public static GlobalLeaderboard GlobalLeaderboard;
 
         public static bool GameInProgress;
 
@@ -44,11 +45,12 @@ namespace Multiplayer
         private void Start()
         {
             //Assign global scripts
-            MultiplayerChatDisplay = this.GetComponent<MultiplayerChatDisplay>();
+            MultiplayerChatDisplay = this.GetComponent<MultiplayerChat>();
             RespawnManager = this.GetComponent<RespawnManager>();
             PlayerDisplay = this.GetComponent<PlayerDisplay>();
             CameraTracking = Camera.main.GetComponent<CameraTracking>();
             SaveManager = this.GetComponent<SaveManager>();
+            GlobalLeaderboard = this.GetComponent<GlobalLeaderboard>();
 
             GameInProgress = true;
             _matchTimer = 0;
@@ -61,7 +63,7 @@ namespace Multiplayer
             PhotonNetwork.LocalPlayer.SetScore(0); //In case the score value still persists from a previous match
 
             Debug.Log("Player Count: " + PhotonNetwork.LocalPlayer.ActorNumber);
-            MultiplayerChatDisplay.CallNewMessage(PhotonNetwork.LocalPlayer.NickName + " joined the game.", false);
+            //MultiplayerChatDisplay.CallNewMessage(PhotonNetwork.LocalPlayer.NickName + " joined the game.", false);
 
             if(PhotonNetwork.IsMasterClient)
             {
@@ -152,7 +154,7 @@ namespace Multiplayer
                 restartGameButtons[2].SetActive(false);
             }
 
-            MultiplayerChatDisplay.CallNewMessage(otherPlayer.NickName + " left the game.", true);
+            //MultiplayerChatDisplay.CallNewMessage(otherPlayer.NickName + " left the game.", true);
         }
 
         public override void OnMasterClientSwitched(Player newMasterClient)
@@ -301,6 +303,7 @@ namespace Multiplayer
                 playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
                 playerData.roomName = PhotonNetwork.CurrentRoom.Name;
 
+                GlobalLeaderboard.SubmitScore(currentScore);
                 SaveManager.SavePlayerData();
             }
         }    

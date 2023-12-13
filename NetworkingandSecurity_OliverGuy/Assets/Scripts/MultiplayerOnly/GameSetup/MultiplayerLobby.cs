@@ -4,11 +4,15 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using PlayFab;
+using PlayFab.ClientModels;
 
 namespace Multiplayer
 {
     public class MultiplayerLobby : MonoBehaviourPunCallbacks //The script is responsible for setting up rooms for players and allowing them to join new rooms.
     {
+        public static MultiplayerChat MultiplayerChat;
+
         [Header("Panels")]
 
         //The following panels refer to the different menus for joining/setting up rooms
@@ -47,6 +51,11 @@ namespace Multiplayer
         private Dictionary<string, RoomInfo> _cachedRoomList; //The rooms currently in existance
         private string _playerName; //The player's nickname/username
 
+        private void Awake()
+        {
+            MultiplayerChat = this.GetComponent<MultiplayerChat>();
+        }
+
         private void Start()
         {
             playerNameInput.text = _playerName = string.Format("Player {0}", Random.Range(1, 1000000)); //Set the name to be a random name, that is also editable by the player.
@@ -58,8 +67,18 @@ namespace Multiplayer
 
         public void LoginButtonClicked() //Via Inspector (Button)
         {
-            PhotonNetwork.LocalPlayer.NickName = _playerName = playerNameInput.text;
-            PhotonNetwork.ConnectUsingSettings();
+            if(playerNameInput.text.Trim() != "")
+            {
+                PhotonNetwork.LocalPlayer.NickName = _playerName = playerNameInput.text;
+
+                PhotonNetwork.LocalPlayer.NickName = _playerName = playerNameInput.text;
+                PhotonNetwork.ConnectUsingSettings();
+                UpdatePlayFabUsername(_playerName);
+            }
+            else
+            {
+                Debug.Log("Player name is invalid.");
+            }
         }
 
         public void DisconnectButtonClicked() //Via Inspector (Button)
@@ -199,6 +218,10 @@ namespace Multiplayer
 
         public override void OnJoinedRoom()
         {
+            var authentication = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+            MultiplayerChat.username = PhotonNetwork.LocalPlayer.NickName;
+            MultiplayerChat.chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authentication);
+
             Debug.Log("Room has been joined!");
 
             ActivatePanel("InsideRoom");
@@ -217,6 +240,11 @@ namespace Multiplayer
 
         public override void OnLeftRoom()
         {
+            if(MultiplayerChat.chatClient != null)
+            {
+                MultiplayerChat.chatClient.Disconnect();
+            }
+
             Debug.Log("Room has been left!");
             ActivatePanel("CreateRoom");
             DestroyChildren(insideRoomPlayerList);
@@ -298,6 +326,26 @@ namespace Multiplayer
         }
 
         #endregion
+
+        private void UpdatePlayFabUsername(string name)
+        {
+            UpdateUserTitleDisplayNameRequest request = new UpdateUserTitleDisplayNameRequest()
+            {
+                DisplayName = name,
+            };
+
+            PlayFabClientAPI.UpdateUserTitleDisplayName(request, PlayFabUserTitleDisplayNameResult, PlayFabUpdateUserTitleDisplayNameError);
+        }
+
+        private void PlayFabUserTitleDisplayNameResult(UpdateUserTitleDisplayNameResult updateUserTitleDisplayNameResult)
+        {
+            Debug.Log("PlayFab - UserTitleDisplayName updated.");
+        }
+
+        private void PlayFabUpdateUserTitleDisplayNameError(PlayFabError updateUserTitleDisplayNameError)
+        {
+            Debug.Log("PlayFab - Error occurred while updating UserTitleDisplayName: " + updateUserTitleDisplayNameError.ErrorMessage);
+        }
     }
 }
 

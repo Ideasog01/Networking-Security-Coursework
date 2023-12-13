@@ -1,1 +1,1 @@
-{"username":null,"bestScore":0,"bestScoreDate":null,"totalPlayersInGame":0,"roomName":null}
+{"uid":"883ae53a-4de9-4734-9c44-09cbc662c7e8","encryptedRequest":"883ae53a-4de9-4734-9c44-09cbc662c7e8","username":null,"bestScore":0,"bestScoreDate":null,"totalPlayersInGame":0,"roomName":null}
