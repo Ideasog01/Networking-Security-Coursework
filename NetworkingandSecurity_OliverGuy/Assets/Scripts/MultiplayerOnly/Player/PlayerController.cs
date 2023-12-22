@@ -80,7 +80,7 @@ namespace Multiplayer
         {
             if (_photonView.IsMine)
             {
-                if(!_isPlayerDisabled)
+                if(!_isPlayerDisabled && _playerHealthController.CurrentHealth > 0)
                 {
                     PlayerGameplayInput(); //As long as the player is enabled, they can perform abilities (if not on cooldown).
 

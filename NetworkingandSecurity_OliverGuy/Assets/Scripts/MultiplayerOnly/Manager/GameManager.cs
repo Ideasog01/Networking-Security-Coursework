@@ -110,7 +110,6 @@ namespace Multiplayer
                 if (targetPlayer.GetScore() == maxScore) //If the score reached maximum, declare the winner on all clients
                 {
                     _photonView.RPC("FindWinner", RpcTarget.AllViaServer);
-                    StorePersonalBest();
                 }
             }
         }
@@ -273,6 +272,8 @@ namespace Multiplayer
                         draw = true;
                     }
                 }
+
+                StorePersonalBest();
 
                 //Display the end screen based on whether the local result is victory, defeat or draw.
                 if (draw)

@@ -1,11 +1,11 @@
-using UnityEngine.UI;
 using UnityEngine;
+using TMPro;
 
 public class LeaderboardItem : MonoBehaviour
 {
-    public Text orderText;
-    public Text usernameText;
-    public Text scoreText;
+    public TextMeshProUGUI orderText;
+    public TextMeshProUGUI usernameText;
+    public TextMeshProUGUI scoreText;
 
     public void SetScores(int order, string username, int score)
     {

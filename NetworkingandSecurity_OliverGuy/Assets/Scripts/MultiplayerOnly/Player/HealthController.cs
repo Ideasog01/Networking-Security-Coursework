@@ -126,6 +126,7 @@ namespace Multiplayer
         {
             _characterAnimator.SetBool("isDead", false);
             _currentHealth = maxHealth;
+            healthSlider.value = _currentHealth;
         }
 
         #endregion
