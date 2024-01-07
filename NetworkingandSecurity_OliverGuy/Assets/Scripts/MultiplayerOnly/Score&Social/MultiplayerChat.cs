@@ -4,33 +4,129 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
+using System.Collections;
 
 namespace Multiplayer
 {
     public class MultiplayerChat : MonoBehaviour, IChatClientListener
     {
-        public string username;
-        public ChatClient chatClient;
+        public static bool IsChatActive;
 
-        public TextMeshProUGUI chatText;
-        public TMP_InputField userMessageInput;
+        [SerializeField] private string username;
+        [SerializeField] private ChatClient chatClient;
 
-        private void Start()
+        [SerializeField] private TextMeshProUGUI chatText;
+        [SerializeField] private TMP_InputField userMessageInput;
+
+        private GameObject _chatDisplayParent;
+
+        private float _hideChatDelay;
+
+        private void Awake()
         {
-            chatClient = new ChatClient(this);
+            DontDestroyOnLoad(this.gameObject);
+
+            if(_chatDisplayParent == null)
+            {
+                _chatDisplayParent = this.transform.GetChild(0).gameObject;
+                _chatDisplayParent.SetActive(false);
+            }
         }
 
         private void Update()
         {
-            chatClient.Service();
+            if(chatClient != null)
+            {
+                chatClient.Service();
+
+                ChatInput();
+
+                HideChatCooldown();
+            }
         }
 
-        public void SetMessage()
+        private void HideChatCooldown()
+        {
+            if(_hideChatDelay > 0)
+            {
+                _hideChatDelay -= Time.deltaTime * 1;
+            }
+            else
+            {
+                DisplayChat(false);
+            }
+        }
+
+        public void ConnectToChat()
+        {
+            chatClient = new ChatClient(this);
+
+            var authentication = new AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+            username = PhotonNetwork.LocalPlayer.NickName;
+            chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authentication);
+
+            DisplayChat(true);
+        }
+
+        public void DisconnectFromChat()
+        {
+            chatClient.Disconnect();
+            DisplayChat(false);
+        }
+
+        public void BeginHideChatTimer()
+        {
+            _hideChatDelay = 8;
+        }
+
+        public void DisplayChat(bool active)
+        {
+            if(chatClient != null)
+            {
+                _chatDisplayParent.SetActive(active);
+                IsChatActive = active;
+
+                if(!active) //Hiding the chat
+                {
+                    userMessageInput.text = "";
+                    StopAllCoroutines();
+                }
+                else
+                {
+                    userMessageInput.Select();
+                    BeginHideChatTimer();
+                }
+            }
+        }
+
+        public void SetMessage() //Sends the message to the chat over the server
         {
             if(userMessageInput.text != "")
             {
-                chatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, userMessageInput.text);
-                userMessageInput.text = "";
+                if(chatClient != null)
+                {
+                    chatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, userMessageInput.text);
+                    userMessageInput.text = "";
+                }
+                else
+                {
+                    Debug.Log("Chat client is null!");
+                }
+            }
+        }
+
+        private void ChatInput()
+        {
+            if(IsChatActive) //Then the chat is being displayed
+            {
+                if(Input.GetKeyDown(KeyCode.Return) && userMessageInput.text != "")
+                {
+                    SetMessage(); //Sends a message
+                }
+            }
+            else if(Input.GetKeyDown(KeyCode.Return))
+            {
+                DisplayChat(true);
             }
         }
 
@@ -62,6 +158,7 @@ namespace Multiplayer
             if(chatClient.TryGetChannel(PhotonNetwork.CurrentRoom.Name, out currentChat))
             {
                 chatText.text = currentChat.ToStringMessages();
+                DisplayChat(true);
             }
         }
 

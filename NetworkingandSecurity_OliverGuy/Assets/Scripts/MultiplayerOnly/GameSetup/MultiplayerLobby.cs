@@ -11,8 +11,6 @@ namespace Multiplayer
 {
     public class MultiplayerLobby : MonoBehaviourPunCallbacks //The script is responsible for setting up rooms for players and allowing them to join new rooms.
     {
-        public static MultiplayerChat MultiplayerChat;
-
         [Header("Panels")]
 
         //The following panels refer to the different menus for joining/setting up rooms
@@ -47,14 +45,10 @@ namespace Multiplayer
         [SerializeField] private TextMeshProUGUI roomNameText; //The title of the room, displayed within the room menu itself.
         [SerializeField] private Button startGameButton; //Only available for the host and only interactable when more than one players are inside the room. 
         [SerializeField] private GameObject waitingForPlayersTextObj; //The text that will display when more players are required to start the game. (Only viewable by the master client)
+        [SerializeField] private MultiplayerChat chatDisplay;
 
         private Dictionary<string, RoomInfo> _cachedRoomList; //The rooms currently in existance
         private string _playerName; //The player's nickname/username
-
-        private void Awake()
-        {
-            MultiplayerChat = this.GetComponent<MultiplayerChat>();
-        }
 
         private void Start()
         {
@@ -218,10 +212,6 @@ namespace Multiplayer
 
         public override void OnJoinedRoom()
         {
-            var authentication = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
-            MultiplayerChat.username = PhotonNetwork.LocalPlayer.NickName;
-            MultiplayerChat.chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authentication);
-
             Debug.Log("Room has been joined!");
 
             ActivatePanel("InsideRoom");
@@ -236,13 +226,16 @@ namespace Multiplayer
 
             //Update room title
             roomNameText.text = PhotonNetwork.CurrentRoom.Name;
+            chatDisplay.gameObject.SetActive(true);
+
+            chatDisplay.ConnectToChat();
         }
 
         public override void OnLeftRoom()
         {
-            if(MultiplayerChat.chatClient != null)
+            if(chatDisplay != null)
             {
-                MultiplayerChat.chatClient.Disconnect();
+                chatDisplay.DisconnectFromChat();
             }
 
             Debug.Log("Room has been left!");
@@ -334,7 +327,14 @@ namespace Multiplayer
                 DisplayName = name,
             };
 
-            PlayFabClientAPI.UpdateUserTitleDisplayName(request, PlayFabUserTitleDisplayNameResult, PlayFabUpdateUserTitleDisplayNameError);
+            if (PlayFabClientAPI.IsClientLoggedIn())
+            {
+                PlayFabClientAPI.UpdateUserTitleDisplayName(request, PlayFabUserTitleDisplayNameResult, PlayFabUpdateUserTitleDisplayNameError);
+            }
+            else
+            {
+                Debug.LogWarning("Player is not logged in...");
+            }
         }
 
         private void PlayFabUserTitleDisplayNameResult(UpdateUserTitleDisplayNameResult updateUserTitleDisplayNameResult)

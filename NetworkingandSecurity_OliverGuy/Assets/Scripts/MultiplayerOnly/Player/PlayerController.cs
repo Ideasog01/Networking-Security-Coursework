@@ -78,7 +78,7 @@ namespace Multiplayer
 
         private void Update()
         {
-            if (_photonView.IsMine)
+            if (_photonView.IsMine && !MultiplayerChat.IsChatActive)
             {
                 if(!_isPlayerDisabled && _playerHealthController.CurrentHealth > 0)
                 {
@@ -103,7 +103,7 @@ namespace Multiplayer
 
         private void FixedUpdate()
         {
-            if (_photonView.IsMine)
+            if (_photonView.IsMine && !MultiplayerChat.IsChatActive)
             {
                 _playerMovement.UpdateMovement(); //Update physics on fixed update only
             }
