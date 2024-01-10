@@ -10,6 +10,8 @@ public class SaveManager : MonoBehaviour
 
     private static PlayerData _playerData;
 
+    private static readonly string keyWord = "1234567";
+
     public PlayerData PlayerData
     {
         get { return _playerData; }
@@ -24,7 +26,10 @@ public class SaveManager : MonoBehaviour
     public void SavePlayerData()
     {
         string serialisedDataString = JSON.Serialize(_playerData).CreateString();
-        File.WriteAllText(filePath, serialisedDataString);
+
+        string encodeBase64String = EncodeBase64(serialisedDataString);
+        string encryptedDataString = EncryptDecryptData(encodeBase64String);
+        File.WriteAllText(filePath, encryptedDataString);
     }
 
     public void LoadPlayerData()
@@ -36,7 +41,10 @@ public class SaveManager : MonoBehaviour
         }
 
         string fileContents = File.ReadAllText(filePath);
-        _playerData = JSON.ParseString(fileContents).Deserialize<PlayerData>();
+        string decryptedDataString = EncryptDecryptData(fileContents);
+        string decodeBase64String = DecodeBase64(decryptedDataString);
+
+        _playerData = JSON.ParseString(decodeBase64String).Deserialize<PlayerData>();
     }
 
     private void LoginToPlayFab()
@@ -58,6 +66,29 @@ public class SaveManager : MonoBehaviour
     private void PlayFabLoginError(PlayFabError loginError)
     {
         Debug.Log("PlayFab - Login Failed: " + loginError.ToString());
+    }
 
+    public string EncodeBase64(string input)
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes(input);
+        return System.Convert.ToBase64String(bytes);
+    }
+
+    public string DecodeBase64(string input)
+    {
+        var base64EncodedBytes = System.Convert.FromBase64String(input);
+        return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+    }
+
+    private string EncryptDecryptData(string dataString)
+    {
+        string result = "";
+
+        for (int i = 0; i < dataString.Length; i++)
+        {
+            result += (char)(dataString[i] ^ keyWord[i % keyWord.Length]);
+        }
+
+        return result;
     }
 }

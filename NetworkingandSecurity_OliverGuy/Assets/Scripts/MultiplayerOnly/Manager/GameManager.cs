@@ -135,6 +135,7 @@ namespace Multiplayer
 
         public override void OnDisconnected(DisconnectCause cause)
         {
+            Destroy(FindFirstObjectByType<MultiplayerChat>().gameObject);
             SceneManager.LoadScene("MainMenu");
         }
 
@@ -304,7 +305,8 @@ namespace Multiplayer
                 playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
                 playerData.roomName = PhotonNetwork.CurrentRoom.Name;
 
-                GlobalLeaderboard.SubmitScore(currentScore);
+                GlobalLeaderboard.SubmitScore(PhotonNetwork.LocalPlayer.GetScore());
+
                 SaveManager.SavePlayerData();
             }
         }    

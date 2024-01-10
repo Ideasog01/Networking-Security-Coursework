@@ -5,10 +5,10 @@ using PlayFab;
 
 public class GlobalLeaderboard : MonoBehaviour
 {
-    public int maxResults = 5;
-    public LeaderboardPopup leaderboardPopup;
+    [SerializeField] private int maxResults = 5; //The max results for the leaderboard (number of player scores)
+    [SerializeField] private LeaderboardPopup leaderboardPopup; //Manages the leaderboard interface
 
-    public void SubmitScore(int playerScore)
+    public void SubmitScore(int playerScore) //Submits the new score to the leaderboard
     {
         UpdatePlayerStatisticsRequest request = new UpdatePlayerStatisticsRequest()
         {
@@ -16,7 +16,7 @@ public class GlobalLeaderboard : MonoBehaviour
             {
                 new StatisticUpdate()
                 {
-                    StatisticName = "Most Kills",
+                    StatisticName = "Most Kills", //The name of the leaderboard
                     Value = playerScore,
                 }
             }
@@ -27,7 +27,7 @@ public class GlobalLeaderboard : MonoBehaviour
 
     public void GetLeaderboard()
     {
-        GetLeaderboardRequest request = new GetLeaderboardRequest()
+        GetLeaderboardRequest request = new GetLeaderboardRequest() //Retrieves the leaderboard values for later displaying the menu
         {
             MaxResultsCount = maxResults,
             StatisticName = "Most Kills",
@@ -46,7 +46,7 @@ public class GlobalLeaderboard : MonoBehaviour
         Debug.Log("PlayFab - error occurred while submitting score: " + updatePlayerStatisticsError.ErrorMessage);
     }
 
-    private void PlayFabGetLeaderboardResult(GetLeaderboardResult getLeaderboardResult)
+    private void PlayFabGetLeaderboardResult(GetLeaderboardResult getLeaderboardResult) //Updates the leaderboard menu using the retreived results
     {
         Debug.Log("PlayFab - GetLeadboard completed.");
         leaderboardPopup.UpdateUI(getLeaderboardResult.Leaderboard);

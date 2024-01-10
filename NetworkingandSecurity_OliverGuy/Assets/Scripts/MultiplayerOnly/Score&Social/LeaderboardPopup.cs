@@ -16,16 +16,16 @@ public class LeaderboardPopup : MonoBehaviour
         _globalLeaderboard = FindFirstObjectByType<GlobalLeaderboard>();
     }
 
-    public void UpdateUI(List<PlayerLeaderboardEntry> playerLeaderboardEntries)
+    public void UpdateUI(List<PlayerLeaderboardEntry> playerLeaderboardEntries) //Update the leaderboard for each entry
     {
         if(playerLeaderboardEntries.Count > 0)
         {
-            foreach (Transform child in scoreHolder.transform)
+            foreach (Transform child in scoreHolder.transform) //Reset leaderboard display
             {
                 Destroy(child.gameObject);
             }
 
-            for (int i = 0; i < playerLeaderboardEntries.Count; i++)
+            for (int i = 0; i < playerLeaderboardEntries.Count; i++) //For entry, display on the leaderboard menu
             {
                 GameObject newLeaderboardItem = Instantiate(leaderboardItem, Vector3.zero, Quaternion.identity, scoreHolder.transform);
                 newLeaderboardItem.GetComponent<LeaderboardItem>().SetScores(i + 1, playerLeaderboardEntries[i].DisplayName, playerLeaderboardEntries[i].StatValue);
@@ -37,7 +37,7 @@ public class LeaderboardPopup : MonoBehaviour
         else
         {
             scoreHolder.SetActive(false);
-            noScoreText.SetActive(true);
+            noScoreText.SetActive(true); //Only display if the number of entries equals to zero
         }
 
 
